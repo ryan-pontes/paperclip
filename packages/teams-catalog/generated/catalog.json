@@ -470,13 +470,24 @@
       "category": "3node",
       "slug": "squad-3node",
       "name": "Squad 3node",
-      "description": "'Squad completo do Ryan Pontes (3node): 24 agentes cobrindo executivos",
+      "description": "Squad completo do Ryan Pontes (3node): 24 agentes cobrindo executivos C-suite, operacionais técnicos (arquitetura, dev, design, QA, security, devops, SRE), produto (PM, scrum master, UX), comunicação (copywriter, brand), inteligência (BI, researcher, prompt engineer) e orquestração (eli). Hierarquia em 2 níveis com CEO no topo e diretoria suportando.",
       "path": "catalog/bundled/3node/squad-3node",
       "entrypoint": "TEAM.md",
       "schema": "agentcompanies/v1",
       "defaultInstall": false,
-      "recommendedForCompanyTypes": [],
-      "tags": [],
+      "recommendedForCompanyTypes": [
+        "startup",
+        "agency",
+        "generalist"
+      ],
+      "tags": [
+        "squad",
+        "3node",
+        "ryan",
+        "full-org",
+        "executive",
+        "engineering"
+      ],
       "counts": {
         "agents": 24,
         "projects": 0,
