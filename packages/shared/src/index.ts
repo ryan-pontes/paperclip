@@ -438,6 +438,7 @@ export type {
   ProjectGoalRef,
   ProjectManagedByPlugin,
   ProjectWorkspace,
+  ProjectWorkspaceMaterializationStatus,
   CompanySearchHighlight,
   CompanySearchArtifactSummary,
   CompanySearchIssueSummary,

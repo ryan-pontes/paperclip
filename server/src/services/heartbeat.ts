@@ -878,7 +878,13 @@ function deriveRepoNameFromRepoUrl(repoUrl: string | null): string | null {
   }
 }
 
-async function ensureManagedProjectWorkspace(input: {
+/**
+ * Idempotently ensure a managed project workspace exists on disk: returns the
+ * resolved cwd untouched when a `.git` checkout (or non-git folder) is already
+ * present, otherwise clones via {@link cloneManagedRepo}. Shared by first-use
+ * reconciliation (Camada B) and proactive on-create materialization (Camada C).
+ */
+export async function ensureManagedProjectWorkspace(input: {
   companyId: string;
   projectId: string;
   repoUrl: string | null;

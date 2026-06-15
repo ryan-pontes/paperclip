@@ -31,6 +31,11 @@ export const projectWorkspaces = pgTable(
     sharedWorkspaceKey: text("shared_workspace_key"),
     metadata: jsonb("metadata").$type<Record<string, unknown>>(),
     isPrimary: boolean("is_primary").notNull().default(false),
+    // NODE-127 Camada C — proactive on-create materialization of managed git checkouts.
+    // Values: 'pending' | 'cloning' | 'ready' | 'failed' | 'not_applicable'.
+    materializationStatus: text("materialization_status").notNull().default("pending"),
+    materializationError: text("materialization_error"),
+    materializedAt: timestamp("materialized_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },

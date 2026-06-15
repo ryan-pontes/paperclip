@@ -9,6 +9,21 @@ import type { AgentEnvConfig } from "./secrets.js";
 export type ProjectWorkspaceSourceType = "local_path" | "git_repo" | "remote_managed" | "non_git_path";
 export type ProjectWorkspaceVisibility = "default" | "advanced";
 
+/**
+ * Lifecycle of the managed git checkout for a workspace (NODE-127 Camada C).
+ * - `pending`: managed clone not yet attempted.
+ * - `cloning`: clone in progress.
+ * - `ready`: `.git` checkout materialized on disk.
+ * - `failed`: clone failed; see `materializationError`.
+ * - `not_applicable`: workspace is not a managed git checkout (no repo to clone).
+ */
+export type ProjectWorkspaceMaterializationStatus =
+  | "pending"
+  | "cloning"
+  | "ready"
+  | "failed"
+  | "not_applicable";
+
 export interface ProjectGoalRef {
   id: string;
   title: string;
@@ -44,6 +59,16 @@ export interface ProjectWorkspace {
   metadata: Record<string, unknown> | null;
   runtimeConfig: ProjectWorkspaceRuntimeConfig | null;
   isPrimary: boolean;
+  /**
+   * Managed-checkout materialization lifecycle (NODE-127 Camada C). Always
+   * populated by the API (the DB column is NOT NULL, default `'pending'`);
+   * optional here so additive type adoption does not churn existing fixtures.
+   */
+  materializationStatus?: ProjectWorkspaceMaterializationStatus;
+  /** Structured `<code>: <message>` when `materializationStatus === 'failed'`. */
+  materializationError?: string | null;
+  /** When the managed `.git` checkout became `ready`. */
+  materializedAt?: Date | null;
   runtimeServices?: WorkspaceRuntimeService[];
   createdAt: Date;
   updatedAt: Date;

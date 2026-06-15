@@ -24,6 +24,7 @@ import {
   type ProjectManagedByPlugin,
   type ProjectWorkspaceRuntimeConfig,
   type ProjectWorkspace,
+  type ProjectWorkspaceMaterializationStatus,
   type WorkspaceRuntimeService,
   type PluginManagedProjectDeclaration,
   type PluginManagedProjectResolution,
@@ -172,6 +173,9 @@ function toWorkspace(
     metadata: (row.metadata as Record<string, unknown> | null) ?? null,
     runtimeConfig: readProjectWorkspaceRuntimeConfig((row.metadata as Record<string, unknown> | null) ?? null),
     isPrimary: row.isPrimary,
+    materializationStatus: row.materializationStatus as ProjectWorkspaceMaterializationStatus,
+    materializationError: row.materializationError ?? null,
+    materializedAt: row.materializedAt ?? null,
     runtimeServices,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
@@ -959,6 +963,8 @@ export function projectService(db: Db) {
                   )
                 : (data.metadata as Record<string, unknown> | null | undefined) ?? null,
             isPrimary: shouldBePrimary,
+            // NODE-127 Camada C: only managed git checkouts need materialization.
+            materializationStatus: sourceType === "git_repo" && repoUrl ? "pending" : "not_applicable",
           })
           .returning()
           .then((rows) => rows[0] ?? null);

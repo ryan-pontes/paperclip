@@ -13,7 +13,9 @@ import {
 import type { WorkspaceRuntimeDesiredState, WorkspaceRuntimeServiceStateMap } from "@paperclipai/shared";
 import { trackProjectCreated } from "@paperclipai/shared/telemetry";
 import { validate } from "../middleware/validate.js";
+import { logger } from "../middleware/logger.js";
 import { accessService, projectService, logActivity, workspaceOperationService } from "../services/index.js";
+import { materializeProjectWorkspace } from "../services/project-workspace-materialization.js";
 import { conflict, forbidden } from "../errors.js";
 import { assertCompanyAccess, getActorInfo } from "./authz.js";
 import {
@@ -182,6 +184,18 @@ export function projectRoutes(db: Db) {
         return;
       }
       createdWorkspaceId = createdWorkspace.id;
+      // NODE-127 Camada C: proactively materialize the managed git checkout so the
+      // workspace is "preparing environment" the moment the project is created.
+      // Fire-and-forget in-process (mirrors enqueueWakeup) — the 201 returns at once
+      // and the job persists its own terminal status / error.
+      if (createdWorkspace.materializationStatus === "pending") {
+        void materializeProjectWorkspace(db, createdWorkspace.id).catch((err) => {
+          logger.error(
+            { err, workspaceId: createdWorkspace.id, projectId: project.id },
+            "failed to schedule project workspace materialization",
+          );
+        });
+      }
     }
     const hydratedProject = workspace ? await svc.getById(project.id) : project;
 
