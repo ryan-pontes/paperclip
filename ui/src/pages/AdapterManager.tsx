@@ -32,6 +32,7 @@ import { cn } from "@/lib/utils";
 import { ChoosePathButton } from "@/components/PathInstructionsModal";
 import { invalidateDynamicParser } from "@/adapters/dynamic-loader";
 import { invalidateConfigSchemaCache } from "@/adapters/schema-config-fields";
+import { ConnectClaudeButton } from "@/adapters/claude-local/ConnectClaudeButton";
 
 function AdapterRow({
   adapter,
@@ -395,6 +396,7 @@ export function AdapterManager() {
 
   return (
     <div className="space-y-6 max-w-5xl">
+      <ConnectClaudeButton />
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
