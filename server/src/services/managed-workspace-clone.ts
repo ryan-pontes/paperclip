@@ -1,4 +1,5 @@
 import { execFile as execFileCallback } from "node:child_process";
+import fs from "node:fs/promises";
 import { promisify } from "node:util";
 
 const execFile = promisify(execFileCallback);
@@ -32,6 +33,9 @@ type RunGit = (
   options: { env: NodeJS.ProcessEnv; timeout: number },
 ) => Promise<{ stdout: string; stderr: string }>;
 
+/** Recursively remove a directory; injectable so tests can assert cleanup. */
+type RmDir = (dir: string) => Promise<void>;
+
 export interface CloneManagedRepoInput {
   repoUrl: string;
   cwd: string;
@@ -43,11 +47,17 @@ export interface CloneManagedRepoInput {
   token?: string | null;
   /** Injectable git runner for tests. */
   runGit?: RunGit;
+  /** Injectable directory remover for tests. */
+  rmDir?: RmDir;
 }
 
 const defaultRunGit: RunGit = async (args, options) => {
   const result = await execFile("git", args, options);
   return { stdout: result.stdout ?? "", stderr: result.stderr ?? "" };
+};
+
+const defaultRmDir: RmDir = async (dir) => {
+  await fs.rm(dir, { recursive: true, force: true });
 };
 
 /** Strip userinfo (credentials) from a URL so it is safe to log or persist. */
@@ -139,6 +149,7 @@ export async function cloneManagedRepo(
   const token = input.token ?? baseEnv.GH_TOKEN ?? baseEnv.GITHUB_TOKEN ?? null;
   const timeout = input.timeoutMs ?? MANAGED_WORKSPACE_GIT_CLONE_TIMEOUT_MS;
   const runGit = input.runGit ?? defaultRunGit;
+  const rmDir = input.rmDir ?? defaultRmDir;
 
   const cleanUrl = sanitizeRepoUrl(input.repoUrl);
   const authUrl = buildAuthenticatedUrl(input.repoUrl, token);
@@ -179,11 +190,21 @@ export async function cloneManagedRepo(
     await runGit(["-C", input.cwd, "remote", "set-url", "origin", cleanUrl], { env, timeout });
   } catch (error) {
     const text = redactToken(gitErrorText(error), token);
+    // The clone succeeded but `.git/config` still holds the authenticated URL with the
+    // token. Remove the partial clone so no credential is left readable on disk.
+    let cleanupNote = "";
+    try {
+      await rmDir(input.cwd);
+    } catch (cleanupError) {
+      cleanupNote = ` (cleanup of "${input.cwd}" also failed: ${
+        redactToken(gitErrorText(cleanupError), token)
+      })`;
+    }
     throw new ManagedWorkspaceCloneError({
       code: "unknown",
       repoUrl: cleanUrl,
       cwd: input.cwd,
-      message: `Cloned "${cleanUrl}" but failed to reset origin remote: ${text}`,
+      message: `Cloned "${cleanUrl}" but failed to reset origin remote: ${text}${cleanupNote}`,
     });
   }
 

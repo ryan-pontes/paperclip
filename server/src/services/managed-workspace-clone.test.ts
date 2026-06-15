@@ -135,6 +135,35 @@ describe("cloneManagedRepo (injected git runner)", () => {
     ).rejects.toMatchObject({ code: "auth_failed" });
   });
 
+  it("removes the partial clone when resetting origin fails, so no token is left on disk", async () => {
+    const removed: string[] = [];
+    let error: unknown;
+    try {
+      await cloneManagedRepo({
+        repoUrl: "https://github.com/acme/private.git",
+        cwd: "/tmp/workspace",
+        token: TOKEN,
+        runGit: async (args) => {
+          if (args.includes("set-url")) {
+            throw { stderr: "fatal: could not write config file" };
+          }
+          return { stdout: "", stderr: "" };
+        },
+        rmDir: async (dir) => {
+          removed.push(dir);
+        },
+      });
+    } catch (caught) {
+      error = caught;
+    }
+
+    expect(error).toBeInstanceOf(ManagedWorkspaceCloneError);
+    expect((error as ManagedWorkspaceCloneError).code).toBe("unknown");
+    expect((error as Error).message).not.toContain(TOKEN);
+    // The cloned dir (which still holds the authenticated URL in .git/config) was purged.
+    expect(removed).toEqual(["/tmp/workspace"]);
+  });
+
   it("classifies killed processes as timeouts", async () => {
     await expect(
       cloneManagedRepo({
