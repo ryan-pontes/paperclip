@@ -873,6 +873,1540 @@
         "path": "skills/last30days",
         "url": "https://github.com/mvanhorn/last30days-skill/tree/v3.3.0/skills/last30days"
       }
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:accessibility",
+      "key": "paperclipai/bundled/3node-skills/accessibility",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "accessibility",
+      "name": "accessibility",
+      "description": "Gate de acessibilidade antes de qualquer UI ir para produção",
+      "path": "catalog/bundled/3node-skills/accessibility",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "engineer"
+      ],
+      "requires": [],
+      "tags": [
+        "accessibility"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 5476,
+          "sha256": "7cd6df49e0438813c1879582746d223652e7a6cc9692d82a3714d9631fd8800f"
+        }
+      ],
+      "contentHash": "sha256:a13634ce6b985f767a2cfdaa4d1810563b4e4014e142d89580e3a7bfd69329a4"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:admin-ui",
+      "key": "paperclipai/bundled/3node-skills/admin-ui",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "admin-ui",
+      "name": "admin-ui",
+      "description": "Padrões de UI pra **dashboard interno** (pós-login) e **estrutura de SaaS completo** (landing + auth + app + settings).",
+      "path": "catalog/bundled/3node-skills/admin-ui",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "engineer"
+      ],
+      "requires": [],
+      "tags": [
+        "admin",
+        "ui"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 14858,
+          "sha256": "27c72bacbc24f4cf343cb9e6fd5988c5bc3ff589911c4d59bac8a03026858b2c"
+        }
+      ],
+      "contentHash": "sha256:381302f7ed8bb19d835dce344aff7dcd0cec7e8c9e7697bbf44dacfe28a7a3da"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:adr",
+      "key": "paperclipai/bundled/3node-skills/adr",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "adr",
+      "name": "adr",
+      "description": "Documenta **decisões não-óbvias** que seriam dolorosas de reverter",
+      "path": "catalog/bundled/3node-skills/adr",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "engineer"
+      ],
+      "requires": [],
+      "tags": [
+        "adr"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 7370,
+          "sha256": "cadb20c61ec0fd0962d324c5001945544eaf37c0ca5c4eabfa513c74713ccfa4"
+        }
+      ],
+      "contentHash": "sha256:1f17f81536b9f510c7c8fc67cd95e6b758b1072ed06525656c3831dfc4ded92f"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:agent-handoff",
+      "key": "paperclipai/bundled/3node-skills/agent-handoff",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "agent-handoff",
+      "name": "agent-handoff",
+      "description": "Output contract por agente",
+      "path": "catalog/bundled/3node-skills/agent-handoff",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "engineer"
+      ],
+      "requires": [],
+      "tags": [
+        "agent",
+        "handoff"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 8199,
+          "sha256": "ae375c2599183bd6848ccc67ac5c3106816d14a4d51c8a96e2b41d61e914d51b"
+        }
+      ],
+      "contentHash": "sha256:6bbe0a19b390ca42aa2e3e4c1c9f2fc023ce50bdc4cb20c7f1b0d005f8ac1a0c"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:agentic-systems",
+      "key": "paperclipai/bundled/3node-skills/agentic-systems",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "agentic-systems",
+      "name": "agentic-systems",
+      "description": "Usado pelo `@cto` ao decidir entre agente autônomo, workflow estruturado, ou código determinístico.",
+      "path": "catalog/bundled/3node-skills/agentic-systems",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "engineer"
+      ],
+      "requires": [],
+      "tags": [
+        "agentic",
+        "systems"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 9498,
+          "sha256": "050c0bbcff30d8f6591ed6bfb67cdd1ac710f6e233e7a09488891042f09ac274"
+        }
+      ],
+      "contentHash": "sha256:7131e1b23bd8b3d19b01051d409b87bab2a8c9e789f66b6f2682227403a913c4"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:agno",
+      "key": "paperclipai/bundled/3node-skills/agno",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "agno",
+      "name": "agno",
+      "description": "Agentes simples com ferramentas",
+      "path": "catalog/bundled/3node-skills/agno",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "engineer"
+      ],
+      "requires": [],
+      "tags": [
+        "agno"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 1638,
+          "sha256": "9b64dee2e4622a47498571ee99a70b29ce3e9c5ecf138703476e4bc89587e025"
+        }
+      ],
+      "contentHash": "sha256:7adcccb20025587c13bbfcdbccb37fe238379d7bfbfcdfd6b9e6afc903fe6aca"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:ai-security",
+      "key": "paperclipai/bundled/3node-skills/ai-security",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "ai-security",
+      "name": "ai-security",
+      "description": "OWASP Top 10 não cobre vulnerabilidades de aplicações com agentes IA",
+      "path": "catalog/bundled/3node-skills/ai-security",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "security"
+      ],
+      "requires": [],
+      "tags": [
+        "ai",
+        "security"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 10148,
+          "sha256": "3db085e94233ebc4a8c7816c0dd78451889960144d121e98f8e72ee30403f393"
+        }
+      ],
+      "contentHash": "sha256:f10e2967621bc91020b210f8577081cecd5ed5a2a7fb1512180b49b2fb979995"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:cohort-analysis",
+      "key": "paperclipai/bundled/3node-skills/cohort-analysis",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "cohort-analysis",
+      "name": "cohort-analysis",
+      "description": "Foco em **revenue cohorts** pro `@cro`",
+      "path": "catalog/bundled/3node-skills/cohort-analysis",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "product-manager"
+      ],
+      "requires": [],
+      "tags": [
+        "cohort",
+        "analysis"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 7529,
+          "sha256": "1f7d467eb05bff69786443f5350ec3d4f55196ddd09d726549ad8b59c190b254"
+        }
+      ],
+      "contentHash": "sha256:96a7debc93d8852702f63d47883098fea93232b1a2226b7c2f0462b1bdc1c004"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:cohort-funnel",
+      "key": "paperclipai/bundled/3node-skills/cohort-funnel",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "cohort-funnel",
+      "name": "cohort-funnel",
+      "description": "Skill complementar ao `product-analytics.md`",
+      "path": "catalog/bundled/3node-skills/cohort-funnel",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "product-manager"
+      ],
+      "requires": [],
+      "tags": [
+        "cohort",
+        "funnel"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 9874,
+          "sha256": "feda8dc2e375e9d9603b8043e8ada481776251f34abc660c1b6aed1aaa0a66b6"
+        }
+      ],
+      "contentHash": "sha256:3858fbbf21aa7478a9387e8aa420cd82740521433379bff2f0c00008c9827ade"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:continuous-discovery",
+      "key": "paperclipai/bundled/3node-skills/continuous-discovery",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "continuous-discovery",
+      "name": "continuous-discovery",
+      "description": "Usado pelo `@cpo`",
+      "path": "catalog/bundled/3node-skills/continuous-discovery",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "product-manager"
+      ],
+      "requires": [],
+      "tags": [
+        "continuous",
+        "discovery"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 8738,
+          "sha256": "70eca9da5fde481b14af63f408b92356890a119cbc76c49ef43d50a1cab65f6d"
+        }
+      ],
+      "contentHash": "sha256:74c98e6ef304f0f8811e3cb97bea94ae54e9c2645b7476bb552ad2d7ea0c24b9"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:conventions",
+      "key": "paperclipai/bundled/3node-skills/conventions",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "conventions",
+      "name": "conventions",
+      "description": "- `snake_case` para funções, variáveis, módulos",
+      "path": "catalog/bundled/3node-skills/conventions",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "engineer"
+      ],
+      "requires": [],
+      "tags": [
+        "conventions"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 2953,
+          "sha256": "fcc315c5e4cd2c93e2d865276bb3a42c58df48528e995dfa7bcdf21c1757ff70"
+        }
+      ],
+      "contentHash": "sha256:5639d8adbe0c1d74a77d7c5f9833b0537ea10fa3593f9cb64d4fffc53c59ffa3"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:conversion-copy",
+      "key": "paperclipai/bundled/3node-skills/conversion-copy",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "conversion-copy",
+      "name": "conversion-copy",
+      "description": "Frameworks pra `/copywriter` escrever copy que **converte** (landing, página de vendas, email de lançamento).",
+      "path": "catalog/bundled/3node-skills/conversion-copy",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "copywriter"
+      ],
+      "requires": [],
+      "tags": [
+        "conversion",
+        "copy"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 9268,
+          "sha256": "590640059dc1d13bcceae54e67ac90b73ef6cfd29a6153e2b38639029d32070b"
+        }
+      ],
+      "contentHash": "sha256:c41bd9631fa82b42855b60cedff00089d96ba0394695b05ac5cefbb0a7932818"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:design",
+      "key": "paperclipai/bundled/3node-skills/design",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "design",
+      "name": "design",
+      "description": "Toda interface criada deve ser **distintiva e production-grade** — evitar estética genérica de IA.",
+      "path": "catalog/bundled/3node-skills/design",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "designer"
+      ],
+      "requires": [],
+      "tags": [
+        "design"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 4629,
+          "sha256": "139dade7472e448962ce178c969889e8df9180d35cf2bc6aa96034e2903207fb"
+        }
+      ],
+      "contentHash": "sha256:2a9f3f6659cf68b993e01438a10892c47d2100b4ac84e085253e3ed948474348"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:design-tokens",
+      "key": "paperclipai/bundled/3node-skills/design-tokens",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "design-tokens",
+      "name": "design-tokens",
+      "description": "Tokens são a fonte única da verdade do design system",
+      "path": "catalog/bundled/3node-skills/design-tokens",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "designer"
+      ],
+      "requires": [],
+      "tags": [
+        "design",
+        "tokens"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 7998,
+          "sha256": "88bb2a2584adb953c6c5e177c0b9af1681d0bf2b8f470bbd3969e1e534da14c4"
+        }
+      ],
+      "contentHash": "sha256:10f5e8ee48bc99d1bf1c143cd644cf8485d71cbcf9f393d1e92ab00844610641"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:error-budget",
+      "key": "paperclipai/bundled/3node-skills/error-budget",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "error-budget",
+      "name": "error-budget",
+      "description": "Disciplina que conecta SLO a decisão de produto",
+      "path": "catalog/bundled/3node-skills/error-budget",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "sre"
+      ],
+      "requires": [],
+      "tags": [
+        "error",
+        "budget"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 5140,
+          "sha256": "5b620af246ee14fb7e0b8fe87aef589fea4186d21bd92ac59a6e24aaf0bc5971"
+        }
+      ],
+      "contentHash": "sha256:fd80c52d73294189d53cdcc267b996f336792f19cc00f29a9c8ff6adc5160051"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:incident-response",
+      "key": "paperclipai/bundled/3node-skills/incident-response",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "incident-response",
+      "name": "incident-response",
+      "description": "Playbook prático pra responder a incidentes",
+      "path": "catalog/bundled/3node-skills/incident-response",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "sre"
+      ],
+      "requires": [],
+      "tags": [
+        "incident",
+        "response"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 7982,
+          "sha256": "0ba2bfa2465fba4f28504825f4167954908adee1a69fe0c0d2d7c8c9f0459e6a"
+        }
+      ],
+      "contentHash": "sha256:9b4d7747b87d5695e04e25faff4695aa2e55358fd83b107552ef5d9e3bd6499a"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:jtbd",
+      "key": "paperclipai/bundled/3node-skills/jtbd",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "jtbd",
+      "name": "jtbd",
+      "description": "Antes de escrever feature no PRD, entender o **job** que o usuário tá tentando completar",
+      "path": "catalog/bundled/3node-skills/jtbd",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "engineer"
+      ],
+      "requires": [],
+      "tags": [
+        "jtbd"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 6986,
+          "sha256": "b966ae031ad669faa4552133ef784ff4f6222ccfdd2b07367ea8dcfc9813f17e"
+        }
+      ],
+      "contentHash": "sha256:6108b27a3bae3a90708a9e84ba390e9651af5d4e3d0e1e6a6b030c18ca19ccdd"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:langchain",
+      "key": "paperclipai/bundled/3node-skills/langchain",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "langchain",
+      "name": "langchain",
+      "description": "- **LangGraph:** agentes com múltiplos passos, loops, estado persistente",
+      "path": "catalog/bundled/3node-skills/langchain",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "engineer"
+      ],
+      "requires": [],
+      "tags": [
+        "langchain"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 1778,
+          "sha256": "bf4a0430fdad101a43d27bbfc145d66f4f47adceb8339dc306b1ef08536e42f4"
+        }
+      ],
+      "contentHash": "sha256:cff5eb0041027e4df81393b47c3baafb8f1553950ed15f5169b9c8672f8b4370"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:llm-architecture",
+      "key": "paperclipai/bundled/3node-skills/llm-architecture",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "llm-architecture",
+      "name": "llm-architecture",
+      "description": "Usado pelo `@cto` ao decidir como integrar LLMs em produtos",
+      "path": "catalog/bundled/3node-skills/llm-architecture",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "engineer"
+      ],
+      "requires": [],
+      "tags": [
+        "llm",
+        "architecture"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 8847,
+          "sha256": "bfe3566cb05980679bb2b38ada591354f84f26e6e5290c3baf778b44be4b2672"
+        }
+      ],
+      "contentHash": "sha256:b0bc6b8162328b3008528c2f61db071022e21897bf495cbf53a1676bd60b2066"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:lovable-mode",
+      "key": "paperclipai/bundled/3node-skills/lovable-mode",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "lovable-mode",
+      "name": "lovable-mode",
+      "description": "Pipeline obrigatório quando o objetivo é **produzir UI que NÃO pareça gerada por IA**",
+      "path": "catalog/bundled/3node-skills/lovable-mode",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "engineer"
+      ],
+      "requires": [],
+      "tags": [
+        "lovable",
+        "mode"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 8701,
+          "sha256": "52a6fde773b84435ffc6cae2da6d0088061cd08c3581f9e8eca60b295a7e856d"
+        }
+      ],
+      "contentHash": "sha256:aaeac91eaabc6e877da776b1e8c6ab771296ccb251dc67ad977373a2ec2d7c6a"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:motion-spring",
+      "key": "paperclipai/bundled/3node-skills/motion-spring",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "motion-spring",
+      "name": "motion-spring",
+      "description": "Motion não é só \"funcionalidade\" — é parte da identidade da marca",
+      "path": "catalog/bundled/3node-skills/motion-spring",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "designer"
+      ],
+      "requires": [],
+      "tags": [
+        "motion",
+        "spring"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 8555,
+          "sha256": "aee811a9566b00a7308fb3cc3ec09e3f53052e630807f0b3658a0e2bd385f341"
+        }
+      ],
+      "contentHash": "sha256:6f34ab9f2f47ab8d9f952b647c18ff24c18df6914030f27c6ec8ddfb37f1ecb3"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:mouse-peeker",
+      "key": "paperclipai/bundled/3node-skills/mouse-peeker",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "mouse-peeker",
+      "name": "mouse-peeker",
+      "description": "Personagem fofo (urso/panda/coruja) em SVG que segue o cursor com as pupilas e cobre os olhos com as patas quando o user clica em \"ver senha\"",
+      "path": "catalog/bundled/3node-skills/mouse-peeker",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "engineer"
+      ],
+      "requires": [],
+      "tags": [
+        "mouse",
+        "peeker"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 6669,
+          "sha256": "925526f409d45aba6e54441b2a362a761823abbf1898edcbb6c5e8cbffb1c64f"
+        }
+      ],
+      "contentHash": "sha256:a98441ecf2c7a365a15cc1a2697e0883742d1dca3a3477b8fdb2a58b85bb5649"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:multitenant",
+      "key": "paperclipai/bundled/3node-skills/multitenant",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "multitenant",
+      "name": "multitenant",
+      "description": "Todo projeto começa multi-tenant",
+      "path": "catalog/bundled/3node-skills/multitenant",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "engineer"
+      ],
+      "requires": [],
+      "tags": [
+        "multitenant"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 19156,
+          "sha256": "17d719e73eee9a586172150050b542d85682c82b27298977b71f0087a4bd4644"
+        }
+      ],
+      "contentHash": "sha256:c5f67afdab3761b67598d2bd187e7b4bed8b53aa3cecbdd9668d3fc536a6e369"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:n8n",
+      "key": "paperclipai/bundled/3node-skills/n8n",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "n8n",
+      "name": "n8n",
+      "description": "Workflows automatizados: CRM triggers, notificações, sincronização entre serviços, agendamentos.",
+      "path": "catalog/bundled/3node-skills/n8n",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "engineer"
+      ],
+      "requires": [],
+      "tags": [
+        "n8n"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 2616,
+          "sha256": "df86a7aafeab5f1c0ee2952f89cc0f46ab0fd1c7ac66c15d138eddd5cdc56793"
+        }
+      ],
+      "contentHash": "sha256:fe0150287071dac72167f79aa449b1cd49dd913d51d1f218f5460739219d9a07"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:netlify",
+      "key": "paperclipai/bundled/3node-skills/netlify",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "netlify",
+      "name": "netlify",
+      "description": "Alternativa à Vercel para deploy de frontend Next.js",
+      "path": "catalog/bundled/3node-skills/netlify",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "devops"
+      ],
+      "requires": [],
+      "tags": [
+        "netlify"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 2060,
+          "sha256": "8f7ba489c98298b7b10f63b586847d7f71f8fb19384c032cb0484717e78e60f2"
+        }
+      ],
+      "contentHash": "sha256:47cf0ea8c7f5222f8fd499a4e7410eadd1185bc6c482fc8a94144eebf7469b83"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:observability",
+      "key": "paperclipai/bundled/3node-skills/observability",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "observability",
+      "name": "observability",
+      "description": "Sem observability, debug em produção é chute",
+      "path": "catalog/bundled/3node-skills/observability",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "sre"
+      ],
+      "requires": [],
+      "tags": [
+        "observability"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 6704,
+          "sha256": "1b6ba68e3a4cd1b8b76ad67427787424c852c97640a227a0a33fd5a868dafa13"
+        }
+      ],
+      "contentHash": "sha256:c269a0599375c29c4fb46e7c0a02b555768efe352b55591e2de54f4b5f359b1f"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:payments",
+      "key": "paperclipai/bundled/3node-skills/payments",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "payments",
+      "name": "payments",
+      "description": "- **Asaas** → clientes brasileiros (PIX, boleto, cartão nacional)",
+      "path": "catalog/bundled/3node-skills/payments",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "engineer"
+      ],
+      "requires": [],
+      "tags": [
+        "payments"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 2582,
+          "sha256": "87a59f8167b751530de15ce0080b8bca6d084c9301bcb10d77943f77fb305e21"
+        }
+      ],
+      "contentHash": "sha256:fc2afc73830901410fcb1683792346714eadaa568e7d1dbd6f853f991304fac1"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:pql-playbook",
+      "key": "paperclipai/bundled/3node-skills/pql-playbook",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "pql-playbook",
+      "name": "pql-playbook",
+      "description": "Usado pelo `@cro`",
+      "path": "catalog/bundled/3node-skills/pql-playbook",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "product-manager"
+      ],
+      "requires": [],
+      "tags": [
+        "pql",
+        "playbook"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 8655,
+          "sha256": "358a94c885fb4700fa0984dbf15197f5e47f1d2091ece217bf397bd411e62cff"
+        }
+      ],
+      "contentHash": "sha256:179feea9ed33f67ffcac62061b0c1fdf38673da2d31317c54fbbcb78da0db47c"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:prd-metrics",
+      "key": "paperclipai/bundled/3node-skills/prd-metrics",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "prd-metrics",
+      "name": "prd-metrics",
+      "description": "Todo critério de sucesso no PRD precisa ser **mensurável**: baseline atual + target esperado",
+      "path": "catalog/bundled/3node-skills/prd-metrics",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "product-manager"
+      ],
+      "requires": [],
+      "tags": [
+        "prd",
+        "metrics"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 8752,
+          "sha256": "d9fe1a129ffc197e1d7b361861754ce3540e1ea6cafae2077015dffea30f3093"
+        }
+      ],
+      "contentHash": "sha256:ad5a8a067ebe29fd95607e51901d08dd9576a615182933e6c6595f431e910847"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:product-analytics",
+      "key": "paperclipai/bundled/3node-skills/product-analytics",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "product-analytics",
+      "name": "product-analytics",
+      "description": "Frameworks pro `@bi` aplicar em SaaS/educação",
+      "path": "catalog/bundled/3node-skills/product-analytics",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "engineer"
+      ],
+      "requires": [],
+      "tags": [
+        "product",
+        "analytics"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 8291,
+          "sha256": "fb38f8cbc92bba5eb9079151ca1f63893fa1fd4f32fdc09a05f829b55a891165"
+        }
+      ],
+      "contentHash": "sha256:fc4b26472f154a561ce6681c846fd196b63eac7191d90c5375d3059a92e7f73b"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:prompt-reasoning",
+      "key": "paperclipai/bundled/3node-skills/prompt-reasoning",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "prompt-reasoning",
+      "name": "prompt-reasoning",
+      "description": "Eleva qualidade de raciocínio em prompts complexos",
+      "path": "catalog/bundled/3node-skills/prompt-reasoning",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "engineer"
+      ],
+      "requires": [],
+      "tags": [
+        "prompt",
+        "reasoning"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 6534,
+          "sha256": "fea16ddff48af2179c447ab065efacdd52d52a2c777864a10500d5370484c5f1"
+        }
+      ],
+      "contentHash": "sha256:55ae242afab2255f3899ec475808bef51c4aba1f4b3015bad71d27d889eae2f7"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:render",
+      "key": "paperclipai/bundled/3node-skills/render",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "render",
+      "name": "render",
+      "description": "Alternativa ao Railway para deploy de backend",
+      "path": "catalog/bundled/3node-skills/render",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "devops"
+      ],
+      "requires": [],
+      "tags": [
+        "render"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 1900,
+          "sha256": "61e2cc09086809297f2ace3ab84d67122ce90c067e596b241df49272c561565d"
+        }
+      ],
+      "contentHash": "sha256:a406a99f26c29f68ddbd34b8215864cef685fac3d92f35ee1bfb0896b084ade6"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:rsc-patterns",
+      "key": "paperclipai/bundled/3node-skills/rsc-patterns",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "rsc-patterns",
+      "name": "rsc-patterns",
+      "description": "Padrões de Server Components, Client Components, Server Actions e caching no Next.js moderno",
+      "path": "catalog/bundled/3node-skills/rsc-patterns",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "engineer"
+      ],
+      "requires": [],
+      "tags": [
+        "rsc",
+        "patterns"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 9643,
+          "sha256": "cfd7711a6ea54f97bc01f162c33756add16824b9f7326bd02477668c1c62a0fa"
+        }
+      ],
+      "contentHash": "sha256:3cc8a304de1765f893b1cdb68e8e5dff557019b641b31f26d9feeed18b181c1a"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:runbooks",
+      "key": "paperclipai/bundled/3node-skills/runbooks",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "runbooks",
+      "name": "runbooks",
+      "description": "Procedimento executável por **qualquer pessoa**, sem contexto prévio, em situação de pressão.",
+      "path": "catalog/bundled/3node-skills/runbooks",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "sre"
+      ],
+      "requires": [],
+      "tags": [
+        "runbooks"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 7149,
+          "sha256": "50285341412bb4e09950cf5e9a029562d89dc2af37f0222f430358d27f02a721"
+        }
+      ],
+      "contentHash": "sha256:6f6fc39ff5dabd1334e05cc4b486c4bdc2f426467639b1ce690c52f73f9ce246"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:slo-sli",
+      "key": "paperclipai/bundled/3node-skills/slo-sli",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "slo-sli",
+      "name": "slo-sli",
+      "description": "Metas mensuráveis de confiabilidade",
+      "path": "catalog/bundled/3node-skills/slo-sli",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "sre"
+      ],
+      "requires": [],
+      "tags": [
+        "slo",
+        "sli"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 5235,
+          "sha256": "27bee6819551e7fc85543c8fb454ed353dffeda4224beec235494a9b3d2789df"
+        }
+      ],
+      "contentHash": "sha256:49318cf6bfaf457f4aa60f26fc0bbb22c0af74d549514dfb1c00923ff5829b4a"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:supabase",
+      "key": "paperclipai/bundled/3node-skills/supabase",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "supabase",
+      "name": "supabase",
+      "description": "from supabase import create_client",
+      "path": "catalog/bundled/3node-skills/supabase",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "engineer"
+      ],
+      "requires": [],
+      "tags": [
+        "supabase"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 2493,
+          "sha256": "130ed2c526ccc94cff525ac17ee4e27d13db29e47cac2f9bb05ee8e041ee7785"
+        }
+      ],
+      "contentHash": "sha256:a0f0de1b96080d2a4d973c06fe3221fba6033cb84ad0b771f07744b7fd20e8df"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:testing",
+      "key": "paperclipai/bundled/3node-skills/testing",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "testing",
+      "name": "testing",
+      "description": "- **Backend:** pytest + httpx (async)",
+      "path": "catalog/bundled/3node-skills/testing",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "engineer"
+      ],
+      "requires": [],
+      "tags": [
+        "testing"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 3616,
+          "sha256": "d72840f95cfa1d2129c550a7a096c36eb7a17a54bec17a95d887f1c961017e54"
+        }
+      ],
+      "contentHash": "sha256:f55c5dd0dc044b0997d8dd000d889d8c1fe0c36e534340407c23eb085e46c603"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:typescript-modern",
+      "key": "paperclipai/bundled/3node-skills/typescript-modern",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "typescript-modern",
+      "name": "typescript-modern",
+      "description": "Features que `@felipe` deve usar pra eliminar `any`, `as unknown as` e código frágil.",
+      "path": "catalog/bundled/3node-skills/typescript-modern",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "engineer"
+      ],
+      "requires": [],
+      "tags": [
+        "typescript",
+        "modern"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 8357,
+          "sha256": "06c69789f22f455d30e997299332ca5d2282be5ab778cfa9b3707797d55019c2"
+        }
+      ],
+      "contentHash": "sha256:3216d1aa0e36666b6a8c5c8bf215424575876db7211d3a3e352a96e232ccc6e3"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:uazapi",
+      "key": "paperclipai/bundled/3node-skills/uazapi",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "uazapi",
+      "name": "uazapi",
+      "description": "UAZAPI_URL=https://sua-instancia.uazapi.com",
+      "path": "catalog/bundled/3node-skills/uazapi",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "engineer"
+      ],
+      "requires": [],
+      "tags": [
+        "uazapi"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 1828,
+          "sha256": "67c30e4a2977cc3c42aefad192449755583323571e6189bbab1ecb103b94c153"
+        }
+      ],
+      "contentHash": "sha256:8f637138abb509796a9c5b67a306a6ce8c96c62169ebb6e5fbc3bfb86d1012a7"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:usage-based-pricing",
+      "key": "paperclipai/bundled/3node-skills/usage-based-pricing",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "usage-based-pricing",
+      "name": "usage-based-pricing",
+      "description": "Usado pelo `@cfo` ao modelar pricing pra features de IA ou produtos com consumo variável",
+      "path": "catalog/bundled/3node-skills/usage-based-pricing",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "engineer"
+      ],
+      "requires": [],
+      "tags": [
+        "usage",
+        "based",
+        "pricing"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 7760,
+          "sha256": "136608e3429eac34cedb453e5f20a7a1105f92bc83dc0587b0d9e6c377f4e415"
+        }
+      ],
+      "contentHash": "sha256:62ca4712b77c2a7431b1e111b05360facf54b87b5ce64a019e5ef8ade992cb0e"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:ux-accessibility",
+      "key": "paperclipai/bundled/3node-skills/ux-accessibility",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "ux-accessibility",
+      "name": "ux-accessibility",
+      "description": "Versão UX-focada do `accessibility.md` (que cobre auditoria axe-core)",
+      "path": "catalog/bundled/3node-skills/ux-accessibility",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "designer"
+      ],
+      "requires": [],
+      "tags": [
+        "ux",
+        "accessibility"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 6725,
+          "sha256": "8146201c0eb1e28646b7af5e4037d10321a49ccfce01b95ce6785f9c28064ec7"
+        }
+      ],
+      "contentHash": "sha256:9b3b8e3775aa7481225db7362f846f84247ad760533831ec575aed5a213a4eef"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:ux-audit",
+      "key": "paperclipai/bundled/3node-skills/ux-audit",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "ux-audit",
+      "name": "ux-audit",
+      "description": "Auditoria UX antes do `/qa`",
+      "path": "catalog/bundled/3node-skills/ux-audit",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "designer"
+      ],
+      "requires": [],
+      "tags": [
+        "ux",
+        "audit"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 7474,
+          "sha256": "8d6cc8e611ac773b9643604d6135a2074e638aed72bb6e6fce4cd587dd7e4efe"
+        }
+      ],
+      "contentHash": "sha256:c28d865ae83521a5728e29fc02b644f3e2e2e9e8d59947e6018042895b10c583"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:ux-microcopy",
+      "key": "paperclipai/bundled/3node-skills/ux-microcopy",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "ux-microcopy",
+      "name": "ux-microcopy",
+      "description": "Texto que o usuário lê na interface: labels, botões, placeholders, erros, toasts, empty states",
+      "path": "catalog/bundled/3node-skills/ux-microcopy",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "copywriter",
+        "designer"
+      ],
+      "requires": [],
+      "tags": [
+        "ux",
+        "microcopy"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 6077,
+          "sha256": "dac3ca4847861ca654125397523aef14d1aad77f9f0b36819c1866acd82305fc"
+        }
+      ],
+      "contentHash": "sha256:c67d93c37f51a3a7bd89e440cd28a6afa31c8d65362507ef98daa36b342e99c1"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:ux-mobile",
+      "key": "paperclipai/bundled/3node-skills/ux-mobile",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "ux-mobile",
+      "name": "ux-mobile",
+      "description": "Mobile-first não é \"menor\"",
+      "path": "catalog/bundled/3node-skills/ux-mobile",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "designer"
+      ],
+      "requires": [],
+      "tags": [
+        "ux",
+        "mobile"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 7435,
+          "sha256": "ad0103e6bd29d36b60818373aaf085e61d4ac2ed023ca3f7f08f5aa4718f2f3b"
+        }
+      ],
+      "contentHash": "sha256:2cd2adbf0cf2207cba35cf629c17b2df8f58ff66a09214147abdde35e0209e23"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:ux-motion",
+      "key": "paperclipai/bundled/3node-skills/ux-motion",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "ux-motion",
+      "name": "ux-motion",
+      "description": "Motion é linguagem de feedback — não decoração",
+      "path": "catalog/bundled/3node-skills/ux-motion",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "designer"
+      ],
+      "requires": [],
+      "tags": [
+        "ux",
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 7057,
+          "sha256": "0d33289d5220c99a9f07582dd330defa4c69e39a5f64cc942f2c2a0c58f4c362"
+        }
+      ],
+      "contentHash": "sha256:1835d6f6a7d8ed4450432be7561ba1d2a762af6ad6fdb7ae36c7b484eea55578"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:ux-patterns",
+      "key": "paperclipai/bundled/3node-skills/ux-patterns",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "ux-patterns",
+      "name": "ux-patterns",
+      "description": "Padrões prontos pra produção que ainda não viraram default",
+      "path": "catalog/bundled/3node-skills/ux-patterns",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "designer"
+      ],
+      "requires": [],
+      "tags": [
+        "ux",
+        "patterns"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 8737,
+          "sha256": "c85fc52b59804a823c757dd766a29d023996809cf0f304de53ef662928eca49d"
+        }
+      ],
+      "contentHash": "sha256:4cdb9106227f8170eefd07e1f6c06538ed295930787fd6c5117cb8bd011217ee"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:ux-principles",
+      "key": "paperclipai/bundled/3node-skills/ux-principles",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "ux-principles",
+      "name": "ux-principles",
+      "description": "Fundamentos pra decisão rápida de UX",
+      "path": "catalog/bundled/3node-skills/ux-principles",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "designer"
+      ],
+      "requires": [],
+      "tags": [
+        "ux",
+        "principles"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 5010,
+          "sha256": "09d320108d44123b3839ce684d72d3e9fa0168dd83e2047994b4fd7b52791fe5"
+        }
+      ],
+      "contentHash": "sha256:4c22fff032d8262e5d3766612bb6288bf84a8c016e5e9abb6edbb6178af8d49c"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:ux-states",
+      "key": "paperclipai/bundled/3node-skills/ux-states",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "ux-states",
+      "name": "ux-states",
+      "description": "Toda feature que mostra dado **tem 4 estados obrigatórios**: loading, empty, error, success",
+      "path": "catalog/bundled/3node-skills/ux-states",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "designer"
+      ],
+      "requires": [],
+      "tags": [
+        "ux",
+        "states"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 6867,
+          "sha256": "a73c644c860ee917bca5cd1c44168b0ea93abe426a3ffffe74828a86693b9445"
+        }
+      ],
+      "contentHash": "sha256:a92b6f7d08f849a41204de15e1864b5c68b167f59bceb15b3e2327479c9f5879"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:vercel",
+      "key": "paperclipai/bundled/3node-skills/vercel",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "vercel",
+      "name": "vercel",
+      "description": "Plataforma padrão para deploy de frontend Next.js.",
+      "path": "catalog/bundled/3node-skills/vercel",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "devops"
+      ],
+      "requires": [],
+      "tags": [
+        "vercel"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 2004,
+          "sha256": "8e1697b9068b348ec13600e1f0b16e787550fb25275e43575b15da30d82160b7"
+        }
+      ],
+      "contentHash": "sha256:02989062fa6c0909b652984cf2be33b802426ff70b7b78f108aee9266b03ebca"
+    },
+    {
+      "id": "paperclipai:bundled:3node-skills:voice-system",
+      "key": "paperclipai/bundled/3node-skills/voice-system",
+      "kind": "bundled",
+      "category": "3node-skills",
+      "slug": "voice-system",
+      "name": "voice-system",
+      "description": "`/copywriter` define tom no `VOICE.md` por produto",
+      "path": "catalog/bundled/3node-skills/voice-system",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "copywriter"
+      ],
+      "requires": [],
+      "tags": [
+        "voice",
+        "system"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 7823,
+          "sha256": "debb3d776b5816f51753c10dcce2de5a31362e482d208f14923bdcff127a0545"
+        }
+      ],
+      "contentHash": "sha256:e4fdc143e8af961fae62274c92258ec75c1ab9d0e2891e42b7267121cf25af58"
     }
   ]
 }
