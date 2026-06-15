@@ -41,7 +41,7 @@ const SUBMIT_WAIT_MS = 30_000;
 function extractAuthUrl(text: string): string | null {
   // Claude CLI imprime URL no stdout. Captura URLs do dominio Anthropic.
   const match = text.match(
-    /https:\/\/(?:claude\.ai|console\.anthropic\.com|auth\.anthropic\.com)\/[^\s'"]+/
+    /https:\/\/(?:claude\.ai|claude\.com|console\.anthropic\.com|auth\.anthropic\.com)\/[^\s'"]+/
   );
   return match ? match[0] : null;
 }
