@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "packageName": "@paperclipai/teams-catalog",
   "packageVersion": "0.1.0",
-  "generatedAt": "2026-06-04T18:03:41.262Z",
+  "generatedAt": "2026-06-15T13:24:00.000Z",
   "teams": [
     {
       "id": "paperclipai:bundled:company-defaults:core-exec-team",
@@ -462,6 +462,36 @@
       "trustLevel": "markdown_only",
       "compatibility": "compatible",
       "contentHash": "sha256:06822cec5f2b6910cb37ba0ebd5e04ed5c7e34f77225564ddddc2470779cdaa6"
+    },
+    {
+      "id": "paperclipai:bundled:3node:squad-3node",
+      "key": "paperclipai/bundled/3node/squad-3node",
+      "kind": "bundled",
+      "category": "3node",
+      "slug": "squad-3node",
+      "name": "Squad 3node",
+      "description": "'Squad completo do Ryan Pontes (3node): 24 agentes cobrindo executivos",
+      "path": "catalog/bundled/3node/squad-3node",
+      "entrypoint": "TEAM.md",
+      "schema": "agentcompanies/v1",
+      "defaultInstall": false,
+      "recommendedForCompanyTypes": [],
+      "tags": [],
+      "counts": {
+        "agents": 24,
+        "projects": 0,
+        "skills": 0,
+        "totalFiles": 25
+      },
+      "requiredSkills": [],
+      "compatibility": {
+        "minPaperclipVersion": "0.1.0"
+      },
+      "source": {
+        "kind": "bundled",
+        "path": "catalog/bundled/3node/squad-3node"
+      },
+      "trustLevel": "bundled"
     }
   ]
 }
