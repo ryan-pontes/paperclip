@@ -1,7 +1,5 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { execFile as execFileCallback } from "node:child_process";
-import { promisify } from "node:util";
 import { randomUUID } from "node:crypto";
 import { and, asc, desc, eq, getTableColumns, gt, inArray, isNull, lt, lte, notInArray, or, sql } from "drizzle-orm";
 import type { Db } from "@paperclipai/db";
@@ -73,6 +71,10 @@ import { companySkillService } from "./company-skills.js";
 import { budgetService, type BudgetEnforcementScope } from "./budgets.js";
 import { secretService } from "./secrets.js";
 import { resolveDefaultAgentWorkspaceDir, resolveManagedProjectWorkspaceDir } from "../home-paths.js";
+import {
+  cloneManagedRepo,
+  MANAGED_WORKSPACE_GIT_CLONE_TIMEOUT_MS,
+} from "./managed-workspace-clone.js";
 import {
   buildHeartbeatRunIssueComment,
   HEARTBEAT_RUN_RESULT_OUTPUT_MAX_CHARS,
@@ -227,11 +229,9 @@ const PAPERCLIP_WAKE_PAYLOAD_KEY = "paperclipWake";
 const PAPERCLIP_HARNESS_CHECKOUT_KEY = "paperclipHarnessCheckedOut";
 const DETACHED_PROCESS_ERROR_CODE = "process_detached";
 const REPO_ONLY_CWD_SENTINEL = "/__paperclip_repo_only__";
-const MANAGED_WORKSPACE_GIT_CLONE_TIMEOUT_MS = 10 * 60 * 1000;
 const MAX_INLINE_WAKE_COMMENTS = 8;
 const MAX_INLINE_WAKE_COMMENT_BODY_CHARS = 4_000;
 const MAX_INLINE_WAKE_COMMENT_BODY_TOTAL_CHARS = 12_000;
-const execFile = promisify(execFileCallback);
 const EXECUTION_PATH_HEARTBEAT_RUN_STATUSES = ["queued", "running", "scheduled_retry"] as const;
 const CANCELLABLE_HEARTBEAT_RUN_STATUSES = ["queued", "running", "scheduled_retry"] as const;
 const HEARTBEAT_RUN_TERMINAL_STATUSES = ["succeeded", "failed", "cancelled", "timed_out"] as const;
@@ -882,6 +882,8 @@ async function ensureManagedProjectWorkspace(input: {
   companyId: string;
   projectId: string;
   repoUrl: string | null;
+  repoRef?: string | null;
+  defaultRef?: string | null;
 }): Promise<{ cwd: string; warning: string | null }> {
   const cwd = resolveManagedProjectWorkspaceDir({
     companyId: input.companyId,
@@ -917,16 +919,13 @@ async function ensureManagedProjectWorkspace(input: {
     await fs.rm(cwd, { recursive: true, force: true });
   }
 
-  try {
-    await execFile("git", ["clone", input.repoUrl, cwd], {
-      env: sanitizeRuntimeServiceBaseEnv(process.env),
-      timeout: MANAGED_WORKSPACE_GIT_CLONE_TIMEOUT_MS,
-    });
-    return { cwd, warning: null };
-  } catch (error) {
-    const reason = error instanceof Error ? error.message : String(error);
-    throw new Error(`Failed to prepare managed checkout for "${input.repoUrl}" at "${cwd}": ${reason}`);
-  }
+  return cloneManagedRepo({
+    repoUrl: input.repoUrl,
+    cwd,
+    ref: input.defaultRef ?? input.repoRef ?? null,
+    env: sanitizeRuntimeServiceBaseEnv(process.env),
+    timeoutMs: MANAGED_WORKSPACE_GIT_CLONE_TIMEOUT_MS,
+  });
 }
 
 function isWorkspaceValidationFailure(error: unknown): error is WorkspaceValidationFailure {
@@ -4379,6 +4378,8 @@ export function heartbeatService(db: Db, options: HeartbeatServiceOptions = {}) 
               companyId: agent.companyId,
               projectId: workspaceProjectId ?? resolvedProjectId ?? workspace.projectId,
               repoUrl: readNonEmptyString(workspace.repoUrl),
+              repoRef: readNonEmptyString(workspace.repoRef),
+              defaultRef: readNonEmptyString(workspace.defaultRef),
             });
             projectCwd = managedWorkspace.cwd;
             managedWorkspaceWarning = managedWorkspace.warning;
