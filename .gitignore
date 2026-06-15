@@ -60,3 +60,7 @@ tests/release-smoke/playwright-report/
 .superpowers/
 .claude/worktrees/
 .herenow
+
+# Memórias do Ryan com credenciais — NUNCA commitar
+packages/skills-catalog/catalog/bundled/3node-memories/
+
