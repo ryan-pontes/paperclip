@@ -75,6 +75,7 @@ import {
   cloneManagedRepo,
   MANAGED_WORKSPACE_GIT_CLONE_TIMEOUT_MS,
 } from "./managed-workspace-clone.js";
+import { reconcileExistingManagedWorkspace } from "./managed-workspace-reconcile.js";
 import {
   buildHeartbeatRunIssueComment,
   HEARTBEAT_RUN_RESULT_OUTPUT_MAX_CHARS,
@@ -905,6 +906,7 @@ export async function ensureManagedProjectWorkspace(input: {
     }
     return { cwd, warning: null };
   }
+  const repoUrl = input.repoUrl;
 
   const gitDirExists = await fs
     .stat(path.resolve(cwd, ".git"))
@@ -914,24 +916,23 @@ export async function ensureManagedProjectWorkspace(input: {
     return { cwd, warning: null };
   }
 
+  const clone = () =>
+    cloneManagedRepo({
+      repoUrl,
+      cwd,
+      ref: input.defaultRef ?? input.repoRef ?? null,
+      env: sanitizeRuntimeServiceBaseEnv(process.env),
+      timeoutMs: MANAGED_WORKSPACE_GIT_CLONE_TIMEOUT_MS,
+    });
+
   if (stats) {
-    const entries = await fs.readdir(cwd).catch(() => []);
-    if (entries.length > 0) {
-      return {
-        cwd,
-        warning: `Managed workspace path "${cwd}" already exists but is not a git checkout. Using it as-is.`,
-      };
-    }
-    await fs.rm(cwd, { recursive: true, force: true });
+    // Existing dir without a top-level `.git`. It may hold only paperclip-managed
+    // metadata (e.g. `.paperclip`), in which case it is NOT a real checkout and
+    // must be cloned — preserving that metadata. See NODE-141.
+    return reconcileExistingManagedWorkspace({ cwd, clone });
   }
 
-  return cloneManagedRepo({
-    repoUrl: input.repoUrl,
-    cwd,
-    ref: input.defaultRef ?? input.repoRef ?? null,
-    env: sanitizeRuntimeServiceBaseEnv(process.env),
-    timeoutMs: MANAGED_WORKSPACE_GIT_CLONE_TIMEOUT_MS,
-  });
+  return clone();
 }
 
 function isWorkspaceValidationFailure(error: unknown): error is WorkspaceValidationFailure {
