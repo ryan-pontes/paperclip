@@ -110,6 +110,116 @@ publish_package_to_npm ${distTag} @paperclipai/example 1.2.3
   };
 }
 
+function runAuthHelper({ dryRun = "false", env = {}, npmWhoami = "fail" } = {}) {
+  const fixtureDir = mkdtempSync(join(tmpdir(), "paperclip-release-auth-"));
+  const binDir = join(fixtureDir, "bin");
+  mkdirSync(binDir);
+
+  // Fake npm: `npm whoami` succeeds only when NPM_WHOAMI=ok. Everything else
+  // (e.g. `npm view`) is irrelevant to the auth gate, so just succeed quietly.
+  writeExecutable(
+    join(binDir, "npm"),
+    `#!/usr/bin/env bash
+set -euo pipefail
+if [ "\${1:-}" = "whoami" ]; then
+  if [ "\${NPM_WHOAMI:-fail}" = "ok" ]; then
+    echo "release-bot"
+    exit 0
+  fi
+  exit 1
+fi
+exit 0
+`,
+  );
+
+  const script = `
+set -euo pipefail
+source "${repoRoot}/scripts/release-lib.sh"
+require_npm_publish_auth ${dryRun}
+echo "SKIP=\${RELEASE_SKIP_NPM_PUBLISH}"
+`;
+
+  // Start from a clean publish context: never inherit the runner's own
+  // GITHUB_* / token env, then layer the per-test overrides on top.
+  const baseEnv = {
+    ...process.env,
+    PATH: `${binDir}:${process.env.PATH}`,
+    REPO_ROOT: fixtureDir,
+    NPM_WHOAMI: npmWhoami,
+    GITHUB_REPOSITORY: "",
+    GITHUB_ACTIONS: "",
+    PUBLISH_NPM: "",
+    NODE_AUTH_TOKEN: "",
+  };
+
+  let status = 0;
+  let output = "";
+  try {
+    // Use a non-login shell so the prepended fake-bin PATH is honored; a login
+    // shell can re-prioritize system bin dirs ahead of it.
+    output = execFileSync("bash", ["-c", script], {
+      cwd: fixtureDir,
+      encoding: "utf8",
+      env: { ...baseEnv, ...env },
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+  } catch (error) {
+    status = error.status ?? 1;
+    output = `${error.stdout ?? ""}${error.stderr ?? ""}`;
+  }
+
+  return { output, status };
+}
+
+test("require_npm_publish_auth skips publish (success + notice) in an unauthorized fork", () => {
+  const result = runAuthHelper();
+
+  assert.equal(result.status, 0);
+  assert.match(result.output, /npm publish skipped: fork is not the @paperclipai publisher/);
+  assert.match(result.output, /^SKIP=true$/m);
+});
+
+test("require_npm_publish_auth still attempts publish when GITHUB_REPOSITORY is upstream", () => {
+  const result = runAuthHelper({
+    env: { GITHUB_REPOSITORY: "paperclipai/paperclip", GITHUB_ACTIONS: "true" },
+  });
+
+  assert.equal(result.status, 0);
+  assert.match(result.output, /trusted publishing/);
+  assert.match(result.output, /^SKIP=false$/m);
+});
+
+test("require_npm_publish_auth honors PUBLISH_NPM=true with a real npm session", () => {
+  const result = runAuthHelper({ env: { PUBLISH_NPM: "true" }, npmWhoami: "ok" });
+
+  assert.equal(result.status, 0);
+  assert.match(result.output, /Logged in to npm as release-bot/);
+  assert.match(result.output, /^SKIP=false$/m);
+});
+
+test("require_npm_publish_auth honors a real NODE_AUTH_TOKEN", () => {
+  const result = runAuthHelper({ env: { NODE_AUTH_TOKEN: "npm_realtoken" } });
+
+  assert.equal(result.status, 0);
+  assert.match(result.output, /NODE_AUTH_TOKEN/);
+  assert.match(result.output, /^SKIP=false$/m);
+});
+
+test("require_npm_publish_auth fails loudly in an authorized context with no genuine auth", () => {
+  const result = runAuthHelper({ env: { PUBLISH_NPM: "true" }, npmWhoami: "fail" });
+
+  assert.notEqual(result.status, 0);
+  assert.match(result.output, /npm publish auth is not available in an authorized publish context/);
+});
+
+test("require_npm_publish_auth never sets the skip flag on a dry run", () => {
+  const result = runAuthHelper({ dryRun: "true" });
+
+  assert.equal(result.status, 0);
+  assert.match(result.output, /^SKIP=false$/m);
+  assert.doesNotMatch(result.output, /npm publish skipped/);
+});
+
 test("publish_package_to_npm returns after a successful pnpm publish", () => {
   const result = runPublishHelper({ pnpmMode: "success" });
 

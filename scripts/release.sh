@@ -14,6 +14,7 @@ print_version_only=false
 tag_name=""
 
 cleanup_on_exit=false
+RELEASE_SKIP_NPM_PUBLISH=false
 
 usage() {
   cat <<'EOF'
@@ -252,6 +253,9 @@ if [ "$dry_run" = true ]; then
     pnpm publish --dry-run --no-git-checks --tag "$DIST_TAG" 2>&1 | tail -3
   done <<< "$VERSIONED_PACKAGE_INFO"
   release_info "  [dry-run] Would create git tag $tag_name on $CURRENT_SHA"
+elif [ "$RELEASE_SKIP_NPM_PUBLISH" = true ]; then
+  release_info "==> Step 5/7: Skipping npm publish (unauthorized publish context)..."
+  release_info "  ⚠ npm publish skipped: fork is not the @paperclipai publisher; promotion proceeds via git tag + GitHub Release"
 else
   release_info "==> Step 5/7: Publishing packages to npm..."
   while IFS=$'\t' read -r pkg_dir pkg_name pkg_version; do
@@ -266,6 +270,8 @@ fi
 release_info ""
 if [ "$dry_run" = true ]; then
   release_info "==> Step 6/7: Skipping npm verification in dry-run mode..."
+elif [ "$RELEASE_SKIP_NPM_PUBLISH" = true ]; then
+  release_info "==> Step 6/7: Skipping npm verification (publish was skipped)..."
 else
   release_info "==> Step 6/7: Confirming npm package availability and dist-tag integrity..."
   VERIFY_ATTEMPTS="${NPM_PUBLISH_VERIFY_ATTEMPTS:-12}"
@@ -331,12 +337,16 @@ release_info ""
 if [ "$dry_run" = true ]; then
   release_info "Dry run complete for $channel ${TARGET_PUBLISH_VERSION}."
 else
+  if [ "$RELEASE_SKIP_NPM_PUBLISH" = true ]; then
+    release_info "Promoted $channel ${TARGET_PUBLISH_VERSION} via git tag (npm publish skipped: not the @paperclipai publisher)."
+  else
+    release_info "Published $channel ${TARGET_PUBLISH_VERSION}."
+  fi
+
   if [ "$channel" = "canary" ]; then
-    release_info "Published canary ${TARGET_PUBLISH_VERSION}."
-    release_info "Install with: npx paperclipai@canary onboard"
+    [ "$RELEASE_SKIP_NPM_PUBLISH" = true ] || release_info "Install with: npx paperclipai@canary onboard"
     release_info "Next step: git push ${PUBLISH_REMOTE} refs/tags/${tag_name}"
   else
-    release_info "Published stable ${TARGET_PUBLISH_VERSION}."
     release_info "Next steps:"
     release_info "  git push ${PUBLISH_REMOTE} refs/tags/${tag_name}"
     release_info "  ./scripts/create-github-release.sh $TARGET_STABLE_VERSION"
