@@ -209,35 +209,23 @@ export function companyService(db: Db) {
     return "A".repeat(attempt - 1);
   }
 
-  function isIssuePrefixConflict(error: unknown) {
-    const seen = new Set<unknown>();
-    let current = error;
-    while (typeof current === "object" && current !== null && !seen.has(current)) {
-      seen.add(current);
-      const maybe = current as { code?: string; constraint?: string; constraint_name?: string; cause?: unknown };
-      const constraint = maybe.constraint ?? maybe.constraint_name;
-      if (maybe.code === "23505" && constraint === "companies_issue_prefix_idx") {
-        return true;
-      }
-      current = maybe.cause;
-    }
-    return false;
-  }
-
   async function createCompanyWithUniquePrefix(data: typeof companies.$inferInsert) {
     const base = deriveIssuePrefixBase(data.name);
     let suffix = 1;
     while (suffix < 10000) {
       const candidate = `${base}${suffixForAttempt(suffix)}`;
-      try {
-        const rows = await db
-          .insert(companies)
-          .values({ ...data, issuePrefix: candidate })
-          .returning();
-        return rows[0];
-      } catch (error) {
-        if (!isIssuePrefixConflict(error)) throw error;
-      }
+      // Resolve issue-prefix collisions (including races between concurrent
+      // creates) at the DB level: a duplicate prefix becomes a clean zero-row
+      // no-op via onConflictDoNothing rather than a thrown unique-violation we
+      // have to recognise by parsing the driver's (wrapper-specific) error
+      // shape. On a no-op we advance to the next suffix and retry. Any other
+      // failure is a real error and propagates.
+      const rows = await db
+        .insert(companies)
+        .values({ ...data, issuePrefix: candidate })
+        .onConflictDoNothing({ target: companies.issuePrefix })
+        .returning();
+      if (rows[0]) return rows[0];
       suffix += 1;
     }
     throw new Error("Unable to allocate unique issue prefix");

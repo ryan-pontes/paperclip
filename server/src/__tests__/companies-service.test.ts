@@ -47,7 +47,7 @@ describeEmbeddedPostgres("companyService", () => {
     await tempDb?.cleanup();
   });
 
-  it("retries generated issue prefixes when Drizzle wraps the unique constraint error", async () => {
+  it("advances to the next issue prefix when the derived prefix is already taken", async () => {
     await db.insert(companies).values({
       name: "Aron Existing",
       issuePrefix: "ARO",
@@ -61,6 +61,24 @@ describeEmbeddedPostgres("companyService", () => {
 
     const rows = await db.select({ issuePrefix: companies.issuePrefix }).from(companies);
     expect(rows.map((row) => row.issuePrefix).sort()).toEqual(["ARO", "AROA"]);
+  });
+
+  it("assigns distinct issue prefixes to companies created concurrently with the same name", async () => {
+    // Regression for NODE-149: concurrent creates whose names derive the same
+    // base prefix used to surface a duplicate-key "race signature" in CI. The
+    // insert path resolves the collision deterministically at the DB level, so
+    // every create must succeed with its own unique prefix.
+    const svc = companyService(db);
+    const created = await Promise.all(
+      Array.from({ length: 12 }, () => svc.create({ name: "Concurrent Co" })),
+    );
+
+    const prefixes = created.map((company) => company.issuePrefix);
+    expect(new Set(prefixes).size).toBe(prefixes.length);
+
+    const rows = await db.select({ issuePrefix: companies.issuePrefix }).from(companies);
+    expect(rows).toHaveLength(12);
+    expect(new Set(rows.map((row) => row.issuePrefix)).size).toBe(12);
   });
 
   it("archives companies by pausing runnable agents and cancelling active runs", async () => {
