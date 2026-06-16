@@ -65,6 +65,30 @@ RUN npm install --global --omit=dev @anthropic-ai/claude-code@latest @openai/cod
   && mkdir -p /paperclip \
   && chown node:node /paperclip
 
+# Browser automation for the QA/UX visual-truth gate (NODE-153).
+# Chromium + its OS libraries are needed so agents can render UI surfaces and
+# capture screenshots. Browsers MUST live outside HOME: HOME=/paperclip is a
+# runtime VOLUME that would otherwise shadow the default ~/.cache/ms-playwright,
+# so pin a fixed path baked into the image. `playwright` is already present in
+# /app/node_modules via the @playwright/test dependency, so we use the
+# version-pinned project binary (no fresh npm fetch → no browser-revision drift).
+# chromium-headless-shell is installed explicitly alongside chromium: headless
+# launches (chromium.launch({ headless: true })) use the shell, and pinning it
+# avoids any "Executable doesn't exist" drift between Playwright revisions.
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+RUN cd /app \
+  && pnpm exec playwright install --with-deps chromium chromium-headless-shell \
+  && rm -rf /var/lib/apt/lists/* \
+  && chown -R node:node /ms-playwright
+
+# pilot-screenshot helper: render a URL at a viewport and save a PNG from any
+# worktree. The script lives in /app (copied above) and resolves Playwright from
+# /app, so the caller's cwd can be the agent's worktree. The /usr/local/bin
+# wrapper puts it on PATH.
+RUN printf '#!/bin/sh\nexec node /app/scripts/pilot-screenshot.mjs "$@"\n' \
+    > /usr/local/bin/pilot-screenshot \
+  && chmod +x /usr/local/bin/pilot-screenshot
+
 COPY scripts/docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
