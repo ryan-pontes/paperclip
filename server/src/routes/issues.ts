@@ -6709,6 +6709,7 @@ export function issueRoutes(
       req.body.reopen === true ||
       req.body.resume === true ||
       req.body.interrupt === true ||
+      isClosedIssueStatus(issue.status) ||
       (issue.status === "in_review" &&
         parseIssueExecutionState(issue.executionState)?.status === "pending" &&
         isApprovalReviewComment(req.body.body));
