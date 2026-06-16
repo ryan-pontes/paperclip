@@ -358,10 +358,58 @@ require_on_master_branch() {
   fi
 }
 
+# Decides whether this run is an authorized npm publish context.
+#
+# Returns 0 (authorized) when ANY of the following holds:
+#   - GITHUB_REPOSITORY is the upstream publisher-of-record paperclipai/paperclip
+#   - PUBLISH_NPM == 'true' (explicit opt-in via repo/env var)
+#   - NODE_AUTH_TOKEN is set (a real publish token is present)
+#   - `npm whoami` succeeds (an authenticated npm session exists)
+#
+# Returns 1 (not authorized) otherwise. The fork ryan-pontes/paperclip hits
+# this path: the @paperclipai scope's OIDC trusted publisher is the upstream
+# repo, so no token is minted here and the publish step must be skipped
+# gracefully rather than dying with ENEEDAUTH.
+npm_publish_authorized() {
+  if [ "${GITHUB_REPOSITORY:-}" = "paperclipai/paperclip" ]; then
+    return 0
+  fi
+
+  if [ "${PUBLISH_NPM:-}" = "true" ]; then
+    return 0
+  fi
+
+  if [ -n "${NODE_AUTH_TOKEN:-}" ]; then
+    return 0
+  fi
+
+  if npm whoami >/dev/null 2>&1; then
+    return 0
+  fi
+
+  return 1
+}
+
+# Resolves npm publish auth for the run and exports the skip signal that the
+# publish/verify steps honor via RELEASE_SKIP_NPM_PUBLISH.
+#
+#   - dry runs never publish, so auth is irrelevant (skip flag stays false).
+#   - Unauthorized contexts (e.g. the fork) log a loud notice, set the skip
+#     flag, and SUCCEED — promotion still proceeds via git tag + GitHub Release.
+#   - Authorized contexts (upstream, PUBLISH_NPM=true, or a real token) must
+#     have genuine auth and FAIL LOUDLY if it is missing.
 require_npm_publish_auth() {
   local dry_run="$1"
 
+  RELEASE_SKIP_NPM_PUBLISH=false
+
   if [ "$dry_run" = true ]; then
+    return
+  fi
+
+  if ! npm_publish_authorized; then
+    RELEASE_SKIP_NPM_PUBLISH=true
+    release_info "  ⚠ npm publish skipped: fork is not the @paperclipai publisher; promotion proceeds via git tag + GitHub Release"
     return
   fi
 
@@ -370,12 +418,17 @@ require_npm_publish_auth() {
     return
   fi
 
+  if [ -n "${NODE_AUTH_TOKEN:-}" ]; then
+    release_info "  ✓ npm publish auth provided via NODE_AUTH_TOKEN"
+    return
+  fi
+
   if [ "${GITHUB_ACTIONS:-}" = "true" ]; then
     release_info "  ✓ npm publish auth will be provided by GitHub Actions trusted publishing"
     return
   fi
 
-  release_fail "npm publish auth is not available. Use 'npm login' locally or run from GitHub Actions with trusted publishing."
+  release_fail "npm publish auth is not available in an authorized publish context. Use 'npm login' locally or run from GitHub Actions with trusted publishing."
 }
 
 list_public_package_info() {
