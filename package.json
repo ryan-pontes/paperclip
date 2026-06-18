@@ -55,7 +55,7 @@
   "devDependencies": {
     "@playwright/test": "^1.58.2",
     "cross-env": "^10.1.0",
-    "esbuild": "^0.28.0",
+    "esbuild": "^0.28.1",
     "typescript": "^5.7.3",
     "vitest": "^4.1.8"
   },
@@ -68,7 +68,13 @@
       "embedded-postgres@18.1.0-beta.16": "patches/embedded-postgres@18.1.0-beta.16.patch"
     },
     "overrides": {
-      "rollup": ">=4.59.0"
+      "rollup": ">=4.59.0",
+      "hono": ">=4.12.25",
+      "undici": ">=6.24.0",
+      "tar": ">=7.5.16",
+      "defu": ">=6.1.5",
+      "fast-uri": ">=3.1.2",
+      "form-data": ">=4.0.6"
     }
   }
 }
