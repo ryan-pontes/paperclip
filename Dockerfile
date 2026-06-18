@@ -77,6 +77,7 @@ RUN npm install --global --omit=dev @anthropic-ai/claude-code@latest @openai/cod
 # avoids any "Executable doesn't exist" drift between Playwright revisions.
 ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 RUN cd /app \
+  && apt-get update \
   && pnpm exec playwright install --with-deps chromium chromium-headless-shell \
   && rm -rf /var/lib/apt/lists/* \
   && chown -R node:node /ms-playwright
@@ -104,6 +105,7 @@ RUN printf '#!/bin/sh\nexec node /app/scripts/pilot-screenshot.mjs "$@"\n' \
 ARG PLAYWRIGHT_MCP_VERSION=0.0.76
 RUN PW_VERSION="$(npm view @playwright/mcp@${PLAYWRIGHT_MCP_VERSION} dependencies.playwright)" \
   && echo "Baking Chromium for @playwright/mcp@${PLAYWRIGHT_MCP_VERSION} via playwright@${PW_VERSION}" \
+  && apt-get update \
   && npx -y playwright@${PW_VERSION} install --with-deps chromium chromium-headless-shell \
   && rm -rf /var/lib/apt/lists/* \
   && chown -R node:node /ms-playwright
