@@ -1,11 +1,17 @@
 name: Docker
 
 on:
+  # Build only on release tags or manual dispatch — not on every master push.
+  # Master sees ~10 commits/day from the squad; rebuilding the multi-stage
+  # image each time burns GHA minutes (and ran into the spending-limit block)
+  # without giving us anything we use. We rebuild explicitly when we want to
+  # cut over a new image to production: tag `vYYYY.MM.DD.N` (or trigger via
+  # `gh workflow run docker.yml`) and the run publishes `ghcr.io/.../paperclip:<sha>`
+  # + `:latest`.
   push:
-    branches:
-      - "master"
     tags:
       - "v*"
+  workflow_dispatch: {}
 
 permissions:
   contents: read
