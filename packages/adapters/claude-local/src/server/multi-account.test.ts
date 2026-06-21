@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   ClaudeMultiAccountStore,
   isSessionLimitError,
-} from "../services/claude-multi-account.js";
+} from "./multi-account.js";
 
 describe("ClaudeMultiAccountStore", () => {
   let tmpHome: string;
