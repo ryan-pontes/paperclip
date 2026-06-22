@@ -100,6 +100,7 @@ import {
 } from "../services/approval-wakeup.js";
 import {
   resolveTaskWatchdogMutationScope,
+  TASK_WATCHDOG_ORIGIN_KIND,
   taskWatchdogScopeAllowsIssueMutation,
 } from "../services/task-watchdog-scope.js";
 import type { TaskWatchdogServiceDeps, taskWatchdogService } from "../services/task-watchdogs.js";
@@ -2128,6 +2129,255 @@ export function issueRoutes(
       },
     });
     return false;
+  }
+
+  async function rejectAgentIssueThreadInteractionResolution(
+    req: Request,
+    res: Response,
+    issue: {
+      id: string;
+      companyId: string;
+      parentId?: string | null;
+    },
+  ) {
+    if (req.actor.type !== "agent") return false;
+    if (
+      req.actor.runId &&
+      !(await assertTaskWatchdogIssueMutationAllowed(req, res, issue, { allowWatchdogIssue: false }))
+    ) {
+      return true;
+    }
+    res.status(403).json({ error: "Agent actors cannot resolve issue-thread interactions through this board-only route" });
+    return true;
+  }
+
+  async function assertTaskWatchdogCreateIssueAllowed(
+    req: Request,
+    res: Response,
+    companyId: string,
+    parent: {
+      id: string;
+      companyId: string;
+      parentId?: string | null;
+    } | null,
+  ) {
+    if (req.actor.type !== "agent") return true;
+    const scope = await resolveTaskWatchdogMutationScope(db, req.actor);
+    if (scope.kind === "none") return true;
+    if (scope.kind === "invalid") {
+      res.status(403).json({
+        error: scope.detail,
+        details: {
+          securityPrinciples: ["Least Privilege", "Complete Mediation", "Fail Securely"],
+        },
+      });
+      return false;
+    }
+    if (!parent) {
+      res.status(403).json({
+        error: "Task-watchdog runs must create issues inside the watched issue subtree.",
+        details: {
+          companyId,
+          watchedIssueId: scope.watchedIssueId,
+          securityPrinciples: ["Least Privilege", "Complete Mediation", "Fail Securely"],
+        },
+      });
+      return false;
+    }
+    const result = await taskWatchdogScopeAllowsIssueMutation(db, scope, parent, { allowWatchdogIssue: false });
+    if (result.kind !== "invalid") return assertFreshTaskWatchdogSourceMutation(res, scope, parent);
+    res.status(403).json({
+      error: result.detail,
+      details: {
+        parentIssueId: parent.id,
+        securityPrinciples: ["Least Privilege", "Complete Mediation", "Fail Securely"],
+      },
+    });
+    return false;
+  }
+
+  async function resolveWatchdogFollowUpSerializationContext(
+    req: Request,
+    parent: {
+      id: string;
+      companyId: string;
+      status?: string | null;
+      originKind?: string | null;
+    },
+  ) {
+    if (parent.originKind === TASK_WATCHDOG_ORIGIN_KIND) {
+      return {
+        enabled: true as const,
+        watchdogParentIssueId: parent.id,
+      };
+    }
+    if (req.actor.type !== "agent") return null;
+    const scope = await resolveTaskWatchdogMutationScope(db, req.actor);
+    if (scope.kind !== "watchdog") return null;
+    return {
+      enabled: true as const,
+      watchdogParentIssueId: scope.watchdogIssueId,
+    };
+  }
+
+  function mergeIssueBlockerIds(
+    existing: unknown,
+    blockerIssueId: string | null | undefined,
+  ) {
+    const current = Array.isArray(existing)
+      ? existing.filter((value): value is string => typeof value === "string" && value.trim().length > 0)
+      : [];
+    return blockerIssueId ? [...new Set([...current, blockerIssueId])] : [...new Set(current)];
+  }
+
+  async function findCurrentSerializedWatchdogChild(parent: { id: string; companyId: string }) {
+    const children = await db
+      .select({
+        id: issueRows.id,
+        status: issueRows.status,
+      })
+      .from(issueRows)
+      .where(and(
+        eq(issueRows.companyId, parent.companyId),
+        eq(issueRows.parentId, parent.id),
+        inArray(issueRows.status, ["todo", "in_progress", "in_review", "blocked"]),
+        isNull(issueRows.hiddenAt),
+      ))
+      .orderBy(asc(issueRows.issueNumber), asc(issueRows.createdAt), asc(issueRows.id));
+    return children[0] ?? null;
+  }
+
+  async function blockWatchdogParentOnCurrentChild(input: {
+    actor: ReturnType<typeof getActorInfo>;
+    watchdogParentIssueId: string | null | undefined;
+    currentChildIssueId: string | null | undefined;
+  }) {
+    if (!input.watchdogParentIssueId || !input.currentChildIssueId) return;
+    const watchdogParent = await svc.getById(input.watchdogParentIssueId);
+    if (!watchdogParent || watchdogParent.originKind !== TASK_WATCHDOG_ORIGIN_KIND) return;
+    if (watchdogParent.status !== "in_progress" && watchdogParent.status !== "blocked") return;
+
+    const relations = await svc.getRelationSummaries(watchdogParent.id);
+    const nextBlockedByIssueIds = mergeIssueBlockerIds(
+      relations.blockedBy?.map((relation) => relation.id) ?? [],
+      input.currentChildIssueId,
+    );
+    await svc.update(watchdogParent.id, {
+      status: "blocked",
+      blockedByIssueIds: nextBlockedByIssueIds,
+      actorAgentId: input.actor.agentId,
+      actorUserId: input.actor.actorType === "user" ? input.actor.actorId : null,
+    });
+    await logActivity(db, {
+      companyId: watchdogParent.companyId,
+      actorType: input.actor.actorType,
+      actorId: input.actor.actorId,
+      agentId: input.actor.agentId,
+      runId: input.actor.runId,
+      action: "issue.task_watchdog_followups_serialized",
+      entityType: "issue",
+      entityId: watchdogParent.id,
+      details: {
+        watchdogParentIssueId: watchdogParent.id,
+        currentChildIssueId: input.currentChildIssueId,
+        blockedByIssueIds: nextBlockedByIssueIds,
+      },
+    });
+  }
+
+  function normalizeWatchdogDiscovery(input: unknown): {
+    kind: IssueWatchdogDiscoveryKind;
+    evidenceMarkdown: string | null;
+  } | null {
+    if (!input || typeof input !== "object" || Array.isArray(input)) return null;
+    const record = input as Record<string, unknown>;
+    const kind = typeof record.kind === "string" &&
+      (ISSUE_WATCHDOG_DISCOVERY_KINDS as readonly string[]).includes(record.kind)
+      ? record.kind as IssueWatchdogDiscoveryKind
+      : null;
+    if (!kind) return null;
+    const evidenceMarkdown =
+      typeof record.evidenceMarkdown === "string" && record.evidenceMarkdown.trim().length > 0
+        ? record.evidenceMarkdown.trim()
+        : null;
+    return { kind, evidenceMarkdown };
+  }
+
+  function issueMarkdownLink(issue: { id: string; identifier?: string | null }) {
+    const identifier = issue.identifier?.trim();
+    if (!identifier) return `\`${issue.id}\``;
+    const prefix = identifier.split("-")[0] || "PAP";
+    return `[${identifier}](/${prefix}/issues/${identifier})`;
+  }
+
+  function appendWatchdogDiscoveryContext(input: {
+    description: string | null | undefined;
+    discovery: { kind: IssueWatchdogDiscoveryKind; evidenceMarkdown: string | null };
+    sourceIssue: { id: string; identifier?: string | null };
+    watchdogIssue: { id: string; identifier?: string | null } | null;
+    stopFingerprint: string | null;
+    runId: string | null;
+  }) {
+    const contextLines = [
+      "## Watchdog Discovery",
+      "",
+      `Kind: \`${input.discovery.kind}\``,
+      `Watched source issue: ${issueMarkdownLink(input.sourceIssue)}`,
+      input.watchdogIssue ? `Watchdog issue: ${issueMarkdownLink(input.watchdogIssue)}` : null,
+      input.stopFingerprint ? `Stopped fingerprint: \`${input.stopFingerprint}\`` : null,
+      input.runId ? `Watchdog run: \`${input.runId}\`` : null,
+      input.discovery.evidenceMarkdown ? "" : null,
+      input.discovery.evidenceMarkdown ? "Evidence:" : null,
+      input.discovery.evidenceMarkdown ?? null,
+    ].filter((line): line is string => line != null);
+    const existing = input.description?.trim();
+    return existing ? `${existing}\n\n${contextLines.join("\n")}` : contextLines.join("\n");
+  }
+
+  async function resolveTaskWatchdogProductBugFollowUp(
+    req: Request,
+    res: Response,
+    companyId: string,
+    discovery: { kind: IssueWatchdogDiscoveryKind; evidenceMarkdown: string | null } | null,
+  ) {
+    if (!discovery) return null;
+    if (req.actor.type !== "agent") {
+      res.status(403).json({
+        error: "Only task-watchdog agent runs can create watchdog-discovered product bug follow-ups",
+      });
+      return false;
+    }
+    const scope = await resolveTaskWatchdogMutationScope(db, req.actor);
+    if (scope.kind === "none") {
+      res.status(403).json({ error: "Only task-watchdog runs can create watchdog-discovered product bug follow-ups" });
+      return false;
+    }
+    if (scope.kind === "invalid") {
+      res.status(403).json({
+        error: scope.detail,
+        details: {
+          securityPrinciples: ["Least Privilege", "Complete Mediation", "Fail Securely"],
+        },
+      });
+      return false;
+    }
+    if (scope.companyId !== companyId) {
+      res.status(403).json({ error: "Task-watchdog product bug follow-up target is outside the watchdog company" });
+      return false;
+    }
+
+    const sourceIssue = await svc.getById(scope.watchedIssueId);
+    if (!sourceIssue || sourceIssue.companyId !== companyId) {
+      res.status(404).json({ error: "Watched source issue not found" });
+      return false;
+    }
+    const watchdogIssue = scope.watchdogIssueId ? await svc.getById(scope.watchdogIssueId) : null;
+    if (watchdogIssue && watchdogIssue.companyId !== companyId) {
+      res.status(403).json({ error: "Task-watchdog product bug evidence issue is outside the watchdog company" });
+      return false;
+    }
+
+    return { scope, discovery, sourceIssue, watchdogIssue };
   }
 
   // Patch B (NODE-135): gate for the *communicative* act of inserting a comment, distinct from
