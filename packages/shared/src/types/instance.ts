@@ -55,6 +55,8 @@ export interface InstanceExperimentalSettings {
   enableCloudSync: boolean;
   autoRestartDevServerWhenIdle: boolean;
   enableIssueGraphLivenessAutoRecovery: boolean;
+  // Defaults to true (see NODE-256) — preserves historical productivity-review reconciliation behavior.
+  enableProductivityReviewReconciliation: boolean;
   issueGraphLivenessAutoRecoveryLookbackHours: number;
 }
 
