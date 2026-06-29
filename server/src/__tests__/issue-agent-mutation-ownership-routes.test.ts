@@ -1322,11 +1322,8 @@ describe("agent issue mutation checkout ownership", () => {
 
   it.each([
     ["todo", "patch", (app: express.Express) => request(app).patch(`/api/issues/${issueId}`).send({ title: "Todo update" })],
-<<<<<<< HEAD
     // NOTE: ["todo", "comment"] removed — Patch B (NODE-135) allows a peer agent to post a pure
     // comment on a peer's issue regardless of status. Field/status mutations stay write-locked.
-=======
->>>>>>> upstream/master
     ["blocked", "patch", (app: express.Express) => request(app).patch(`/api/issues/${issueId}`).send({ title: "Blocked update" })],
   ])("rejects peer agent %s issue %s mutations outside active checkout ownership", async (status, _kind, sendRequest) => {
     mockIssueService.getById.mockResolvedValue(makeIssue({ status: status as "todo" | "blocked", assigneeAgentId: ownerAgentId }));
