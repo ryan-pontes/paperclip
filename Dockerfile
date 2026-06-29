@@ -79,6 +79,7 @@ RUN npm install --global --omit=dev @anthropic-ai/claude-code@latest @openai/cod
 # avoids any "Executable doesn't exist" drift between Playwright revisions.
 ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 RUN cd /app \
+  && apt-get update \
   && pnpm exec playwright install --with-deps chromium chromium-headless-shell \
   && rm -rf /var/lib/apt/lists/* \
   && chown -R node:node /ms-playwright
@@ -90,6 +91,17 @@ RUN cd /app \
 RUN printf '#!/bin/sh\nexec node /app/scripts/pilot-screenshot.mjs "$@"\n' \
     > /usr/local/bin/pilot-screenshot \
   && chmod +x /usr/local/bin/pilot-screenshot
+
+# Note: the @playwright/mcp Chromium bake (originally added alongside NODE-195)
+# is intentionally skipped here. On the self-hosted ARM64 builder it caused the
+# build to deadlock after Chromium download (no log output for 3 hours, every
+# tagged build cancelled by timeout). The @playwright/test bake above already
+# stages a Chromium revision in PLAYWRIGHT_BROWSERS_PATH; the MCP spawn falls
+# back to a lazy `npx -y @playwright/mcp@<ver>` download on first use
+# (~30s cold start, then cached in the persistent volume). This is the same
+# behaviour pre-NODE-195 — slower first call, but reliable cold builds.
+# To re-introduce baking, run it in a separate stage with PROGRESS=plain
+# and avoid back-to-back `playwright install --with-deps` invocations.
 
 COPY scripts/docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh

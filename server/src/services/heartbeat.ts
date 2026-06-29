@@ -1,6 +1,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
+import { execFile as execFileCallback } from "node:child_process";
+import { promisify } from "node:util";
 import { and, asc, desc, eq, getTableColumns, gt, gte, inArray, isNull, lt, lte, notInArray, or, sql } from "drizzle-orm";
 import type { Db } from "@paperclipai/db";
 import {
@@ -67,6 +69,7 @@ import type {
 import { createLocalAgentJwt } from "../agent-auth-jwt.js";
 import { parseObject, asBoolean, asNumber, appendWithByteCap, MAX_EXCERPT_BYTES } from "../adapters/utils.js";
 import { costService } from "./costs.js";
+import { estimateCostCents } from "./pricing.js";
 import { trackAgentFirstHeartbeat } from "@paperclipai/shared/telemetry";
 import { getTelemetryClient } from "../telemetry.js";
 import { companySkillService } from "./company-skills.js";
@@ -212,6 +215,7 @@ import {
 import { resolveCoreTrustPreset, type TrustPresetResolution } from "./trust-preset-resolver.js";
 import type { PluginWorkerManager } from "./plugin-worker-manager.js";
 
+const execFile = promisify(execFileCallback);
 const MAX_LIVE_LOG_CHUNK_BYTES = 8 * 1024;
 const MAX_PERSISTED_LOG_CHUNK_CHARS = 64 * 1024;
 const MAX_RUN_EVENT_PAYLOAD_STRING_CHARS = 16 * 1024;
@@ -8316,8 +8320,27 @@ export function heartbeatService(db: Db, options: HeartbeatServiceOptions = {}) 
     const outputTokens = usage?.outputTokens ?? 0;
     const cachedInputTokens = usage?.cachedInputTokens ?? 0;
     const billingType = normalizeLedgerBillingType(result.billingType);
-    const additionalCostCents = normalizeBilledCostCents(result.costUsd, billingType);
     const hasTokenUsage = inputTokens > 0 || outputTokens > 0 || cachedInputTokens > 0;
+    let additionalCostCents = normalizeBilledCostCents(result.costUsd, billingType);
+    // Subscription plans (e.g. Claude Max OAuth) report no per-request USD, so
+    // the billed cost is 0. Fall back to an estimate from the local pricing
+    // table so cost_events still gets a non-zero USD figure for visibility.
+    // Real metered_api bills (additionalCostCents > 0) are left untouched.
+    if (additionalCostCents === 0 && hasTokenUsage) {
+      const estimated = estimateCostCents(result.model, {
+        inputTokens,
+        cachedInputTokens,
+        outputTokens,
+      });
+      if (estimated != null) {
+        additionalCostCents = estimated;
+      } else {
+        logger.warn(
+          { runId: run.id, agentId: agent.id, model: result.model ?? "unknown" },
+          "cost estimate skipped: model not in pricing table (cost_cents=0); add it to server/src/services/pricing.ts",
+        );
+      }
+    }
     const provider = result.provider ?? "unknown";
     const biller = resolveLedgerBiller(result);
     const ledgerScope = await resolveLedgerScopeForRun(db, agent.companyId, run);

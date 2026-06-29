@@ -1437,11 +1437,11 @@ describeEmbeddedPostgres("heartbeat orphaned process recovery", () => {
     });
     expect(recoveryAction?.nextAction).toContain("Repair the source issue workspace link");
 
-    const validationComment = await waitForValue(async () => {
+    const comments = await waitForValue(async () => {
       const rows = await db.select().from(issueComments).where(eq(issueComments.issueId, issueId));
-      return rows.find((comment) => comment.body.includes("workspace failed validation")) ?? null;
-    });
-    expect(validationComment).toBeTruthy();
+      return rows.some((comment) => comment.body.includes("workspace failed validation")) ? rows : null;
+    }, 5_000);
+    expect(comments?.some((comment) => comment.body.includes("workspace failed validation"))).toBe(true);
   });
 
   it("blocks before dispatch when a declared secret ref has no binding instead of emitting an opaque setup failure", async () => {

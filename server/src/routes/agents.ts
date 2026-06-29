@@ -1225,6 +1225,23 @@ export function agentRoutes(
     return ensureGatewayDeviceKey(adapterType, next);
   }
 
+  async function applyGhTokenHireDefaultEnvBindings(
+    companyId: string,
+    adapterConfig: Record<string, unknown>,
+  ): Promise<Record<string, unknown>> {
+    const ghTokenSecret = await secretsSvc.getByKey?.(companyId, "gh_token");
+    if (!ghTokenSecret) return adapterConfig;
+    const env = asRecord(adapterConfig.env) ?? {};
+    const hasGhToken = Object.prototype.hasOwnProperty.call(env, "GH_TOKEN");
+    const hasGithubToken = Object.prototype.hasOwnProperty.call(env, "GITHUB_TOKEN");
+    if (hasGhToken && hasGithubToken) return adapterConfig;
+    const binding = { type: "secret_ref", secretId: ghTokenSecret.id, version: "latest" as const };
+    const newEnv = { ...env };
+    if (!hasGhToken) newEnv.GH_TOKEN = binding;
+    if (!hasGithubToken) newEnv.GITHUB_TOKEN = binding;
+    return { ...adapterConfig, env: newEnv };
+  }
+
   async function assertAdapterConfigConstraints(
     adapterType: string | null | undefined,
     adapterConfig: Record<string, unknown>,
@@ -2215,9 +2232,9 @@ export function agentRoutes(
       companyId,
       hiredAgentId,
       hireInput.adapterType,
-      applyCreateDefaultsByAdapterType(
-        hireInput.adapterType,
-        rawHireAdapterConfig,
+      await applyGhTokenHireDefaultEnvBindings(
+        companyId,
+        applyCreateDefaultsByAdapterType(hireInput.adapterType, rawHireAdapterConfig),
       ),
     );
     const desiredSkillAssignment = await resolveDesiredSkillAssignment(
@@ -2263,6 +2280,14 @@ export function agentRoutes(
       lastHeartbeatAt: null,
     });
     const agent = await materializeDefaultInstructionsBundleForNewAgent(createdAgent, instructionsBundle);
+    const hireAgentEnv = asRecord(agent.adapterConfig)?.env;
+    if (hireAgentEnv && !requiresApproval) {
+      await secretsSvc.syncEnvBindingsForTarget?.(
+        companyId,
+        { targetType: "agent", targetId: agent.id },
+        hireAgentEnv,
+      );
+    }
 
     let approval: Awaited<ReturnType<typeof approvalsSvc.getById>> | null = null;
     const actor = getActorInfo(req);
@@ -2408,9 +2433,9 @@ export function agentRoutes(
       companyId,
       agentId,
       createInput.adapterType,
-      applyCreateDefaultsByAdapterType(
-        createInput.adapterType,
-        rawCreateAdapterConfig,
+      await applyGhTokenHireDefaultEnvBindings(
+        companyId,
+        applyCreateDefaultsByAdapterType(createInput.adapterType, rawCreateAdapterConfig),
       ),
     );
     const desiredSkillAssignment = await resolveDesiredSkillAssignment(
@@ -3073,6 +3098,14 @@ export function agentRoutes(
     if (!agent) {
       res.status(404).json({ error: "Agent not found" });
       return;
+    }
+    const approvedAgentEnv = asRecord(agent.adapterConfig)?.env;
+    if (approvedAgentEnv) {
+      await secretsSvc.syncEnvBindingsForTarget?.(
+        agent.companyId,
+        { targetType: "agent", targetId: agent.id },
+        approvedAgentEnv,
+      );
     }
 
     await logActivity(db, {

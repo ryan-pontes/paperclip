@@ -5,7 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Db } from "@paperclipai/db";
 import type { DeploymentMode } from "@paperclipai/shared";
-import { instanceSettingsService, issueService } from "../services/index.js";
+import { boardAuthService, instanceSettingsService, issueService } from "../services/index.js";
 import { assertCompanyAccess, getActorInfo } from "./authz.js";
 
 /**
@@ -108,13 +108,26 @@ export function boardChatRoutes(
     }
 
     // The relay spawns the operator's local `claude` CLI with permissions
-    // skipped (it must run headless), so it is only safe where the requester
-    // IS the machine operator: local_trusted is loopback-only single-operator
-    // by construction (see server/src/index.ts boot guards). Refuse everywhere
-    // else rather than lending the server's shell to remote users.
-    if (opts.deploymentMode !== "local_trusted") {
+    // skipped (it must run headless), so it's only safe where the requester
+    // strongly maps to the machine operator.
+    //
+    // - `local_trusted`: loopback-only single-operator by construction
+    //   (see server/src/index.ts boot guards). Safe.
+    // - `authenticated`: requester crossed an org-controlled auth boundary
+    //   (e.g. Cloudflare Access) + Better Auth session. We additionally
+    //   require board-org access (assertBoardOrgAccess) and the body's
+    //   companyId is scoped against the actor's allowed companies further
+    //   downstream. The trade is: accept a small risk of a confused board
+    //   user spawning the CLI, in exchange for letting remote operators and
+    //   trusted collaborators use the conference room at all.
+    // - everything else (multi_tenant, public): refuse.
+    if (
+      opts.deploymentMode !== "local_trusted" &&
+      opts.deploymentMode !== "authenticated"
+    ) {
       res.status(403).json({
-        error: "Board chat is only available on local single-operator instances",
+        error:
+          "Board chat is only available on local or authenticated instances",
         code: "DEPLOYMENT_MODE_UNSUPPORTED",
       });
       return;
@@ -244,6 +257,22 @@ export function boardChatRoutes(
       liveBoardChats -= 1;
     };
 
+    // In `authenticated` deployments the spawned `claude` reaches the local
+    // API on 127.0.0.1, but the actor middleware still requires a Bearer
+    // token there. Mint a short-lived board API key scoped to the requester
+    // and pass it as PAPERCLIP_API_KEY; revoke it after the subprocess
+    // exits so it doesn't linger as a credential lying around.
+    const authSvc = boardAuthService(db);
+    let mintedApiKey: { id: string; token: string } | null = null;
+    if (req.actor.type === "board" && req.actor.userId) {
+      const minted = await authSvc.createNamedBoardApiKey({
+        userId: req.actor.userId,
+        name: `board-chat-${Date.now()}`,
+        expiresAt: new Date(Date.now() + 10 * 60 * 1000),
+      });
+      mintedApiKey = { id: minted.id, token: minted.token };
+    }
+
     const proc = spawn("claude", args, {
       stdio: ["pipe", "pipe", "pipe"],
       cwd: "/tmp",
@@ -251,8 +280,16 @@ export function boardChatRoutes(
         ...process.env,
         PAPERCLIP_API_URL: apiUrl,
         PAPERCLIP_COMPANY_ID: companyId,
+        ...(mintedApiKey ? { PAPERCLIP_API_KEY: mintedApiKey.token } : {}),
       },
     });
+
+    if (mintedApiKey) {
+      const apiKeyId = mintedApiKey.id;
+      proc.once("close", () => {
+        void authSvc.revokeBoardApiKey(apiKeyId).catch(() => undefined);
+      });
+    }
 
     let fullResponse = "";
     let streamedViaDelta = false;

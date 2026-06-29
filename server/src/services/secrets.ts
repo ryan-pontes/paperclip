@@ -388,6 +388,18 @@ export function secretService(db: Db) {
       .then((rows) => rows[0] ?? null);
   }
 
+  async function getByKey(companyId: string, key: string) {
+    return db
+      .select()
+      .from(companySecrets)
+      .where(and(
+        eq(companySecrets.companyId, companyId),
+        eq(companySecrets.key, key),
+        ne(companySecrets.status, "deleted"),
+      ))
+      .then((rows) => rows[0] ?? null);
+  }
+
   async function getSecretVersion(secretId: string, version: number) {
     return db
       .select()
@@ -1893,6 +1905,7 @@ export function secretService(db: Db) {
 
     getById,
     getByName,
+    getByKey,
     resolveSecretValue,
     resolveSecretValueForEphemeralAccess,
 

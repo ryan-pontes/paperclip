@@ -11,10 +11,15 @@ const mockIssueService = vi.hoisted(() => ({
   listComments: vi.fn(),
 }));
 const mockSpawn = vi.hoisted(() => vi.fn());
+const mockBoardAuthService = vi.hoisted(() => ({
+  createNamedBoardApiKey: vi.fn().mockResolvedValue({ id: "key-1", token: "tok-1" }),
+  revokeBoardApiKey: vi.fn().mockResolvedValue(undefined),
+}));
 
 vi.mock("../services/index.js", () => ({
   instanceSettingsService: () => ({ getExperimental: mockGetExperimental }),
   issueService: () => mockIssueService,
+  boardAuthService: () => mockBoardAuthService,
 }));
 
 vi.mock("node:child_process", () => ({ spawn: mockSpawn }));
@@ -24,11 +29,15 @@ vi.mock("../routes/authz.js", () => ({
   assertCompanyAccess: () => {},
 }));
 
-async function createApp(deploymentMode: "local_trusted" | "authenticated" = "local_trusted") {
+async function createApp(deploymentMode: string = "local_trusted") {
   const { boardChatRoutes } = await import("../routes/board-chat.js");
   const app = express();
   app.use(express.json());
-  app.use("/api", boardChatRoutes({} as any, { deploymentMode }));
+  app.use((req: any, _res: any, next: any) => {
+    req.actor = { type: "board", actorId: "user-1", userId: "user-1" };
+    next();
+  });
+  app.use("/api", boardChatRoutes({} as any, { deploymentMode: deploymentMode as any }));
   return app;
 }
 
@@ -55,9 +64,9 @@ describe("POST /api/board/chat/stream feature flag guard (PAP-137)", () => {
     expect(mockIssueService.create).not.toHaveBeenCalled();
   });
 
-  it("returns 403 DEPLOYMENT_MODE_UNSUPPORTED outside local_trusted even with the flag on", async () => {
+  it("returns 403 DEPLOYMENT_MODE_UNSUPPORTED for unknown deployment modes even with the flag on", async () => {
     mockGetExperimental.mockResolvedValue({ enableConferenceRoomChat: true });
-    const app = await createApp("authenticated");
+    const app = await createApp("unknown_mode");
 
     const res = await request(app)
       .post("/api/board/chat/stream")

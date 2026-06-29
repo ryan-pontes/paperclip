@@ -103,8 +103,8 @@ import {
   resolveActiveCeoAgentId,
 } from "../services/approval-wakeup.js";
 import {
-  TASK_WATCHDOG_ORIGIN_KIND,
   resolveTaskWatchdogMutationScope,
+  TASK_WATCHDOG_ORIGIN_KIND,
   taskWatchdogScopeAllowsIssueMutation,
 } from "../services/task-watchdog-scope.js";
 import type { TaskWatchdogServiceDeps, taskWatchdogService } from "../services/task-watchdogs.js";
@@ -5269,7 +5269,6 @@ export function issueRoutes(
 
     void queueIssueAssignmentWakeup({
       heartbeat,
-      db,
       issue,
       reason: "issue_assigned",
       mutation: "create",
@@ -5629,6 +5628,7 @@ export function issueRoutes(
       if (!serializedBlockedChildIds.has(issue.id)) {
         void queueIssueAssignmentWakeup({
           heartbeat,
+          db,
           issue,
           reason: "issue_assigned",
           mutation: "accepted_plan_decomposition",

@@ -284,11 +284,12 @@ export function environmentService(db: Db) {
         return toEnvironment(updated);
       }
 
-      // The partial unique index `environments_managed_sandbox_idx` enforces
-      // "at most one Paperclip-managed sandbox row per instance" at the DB
-      // level. Use ON CONFLICT DO NOTHING keyed on that index so concurrent
-      // callers can race the INSERT; losers re-read the surviving row.
-      const inserted = await db
+      // Concurrency: the partial unique index `environments_managed_sandbox_idx`
+      // (one managed sandbox per instance) makes concurrent creates safe at the
+      // DB level. Two simultaneous callers (e.g. concurrent heartbeats lazily
+      // provisioning a new instance) collapse to a single row: the loser's insert is
+      // a no-op via onConflictDoNothing, and it then re-reads the winning row.
+      const row = await db
         .insert(environments)
         .values({
           name: DEFAULT_KUBERNETES_ENVIRONMENT_NAME,
@@ -303,8 +304,7 @@ export function environmentService(db: Db) {
         })
         .onConflictDoNothing({
           target: [environments.driver],
-          where:
-            sql`${environments.driver} = 'sandbox' AND (${environments.metadata} ->> 'managedByPaperclip')::boolean = true`,
+          where: sql`${environments.driver} = 'sandbox' AND (${environments.metadata} ->> 'managedByPaperclip')::boolean = true`,
         })
         .returning()
         .then((rows) => rows[0] ?? null)
@@ -317,8 +317,10 @@ export function environmentService(db: Db) {
           }
           throw error;
         });
-      if (inserted) return toEnvironment(inserted);
+      if (row) return toEnvironment(row);
 
+      // Lost the race (or a managed row appeared between our SELECT and INSERT):
+      // re-read the surviving managed environment.
       const winner = await db
         .select()
         .from(environments)
